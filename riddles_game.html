@@ -641,387 +641,412 @@
         const playNewGameButton = document.getElementById('playNewGameButton');
 
         /**
-         * Shuffles an array in place using the Fisher-Yates (Knuth) algorithm.
-         * @param {Array} array The array to shuffle.
-         */
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]]; // Swap elements
-            }
-        }
+         * Shuffles an array in place using the Fisher-Yates (Knuth) algorithm.
+         * @param {Array} array The array to shuffle.
+         */
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+            }
+        }
 
-        /**
-         * Speaks a given text using the Web Speech API.
-         * Attempts to use an Australian voice.
-         * @param {string} text The text to speak.
-         * @param {number} [rate=1] Speech rate (0.1 to 10).
-         * @param {number} [pitch=1] Speech pitch (0 to 2).
-         */
-        function speakText(text, rate = 1, pitch = 1) {
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel(); // Stop any current speech
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.volume = 1;
-                utterance.rate = rate;
-                utterance.pitch = pitch;
+        /**
+         * Speaks a given text using the Web Speech API.
+         * Attempts to use an Australian voice.
+         * @param {string} text The text to speak.
+         * @param {number} [rate=1] Speech rate (0.1 to 10).
+         * @param {number} [pitch=1] Speech pitch (0 to 2).
+         */
+        function speakText(text, rate = 1, pitch = 1) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); // Stop any current speech
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.volume = 1;
+                utterance.rate = rate;
+                utterance.pitch = pitch;
 
-                if (australianVoice) {
-                    utterance.voice = australianVoice;
-                } else {
-                    console.warn("Australian voice not found, using default voice.");
-                }
-                window.speechSynthesis.speak(utterance);
-            } else {
-                console.warn("Speech Synthesis not supported in this browser.");
-            }
-        }
+                if (australianVoice) {
+                    utterance.voice = australianVoice;
+                } else {
+                    console.warn("Australian voice not found, using default voice.");
+                }
+                window.speechSynthesis.speak(utterance);
+            } else {
+                console.warn("Speech Synthesis not supported in this browser.");
+            }
+        }
 
-        /**
-         * Attempts to find and set an Australian English voice.
-         */
-        function setAustralianVoice() {
-            const voices = window.speechSynthesis.getVoices();
-            let found = false;
-            // Try to find an explicit Australian English voice
-            for (let i = 0; i < voices.length; i++) {
-                if (voices[i].lang === 'en-AU' || voices[i].name.includes('Australia')) {
-                    australianVoice = voices[i];
-                    found = true;
-                    break;
-                }
-            }
-            // Fallback to British English or generic English if Australian not found
-            if (!found) {
-                for (let i = 0; i < voices.length; i++) {
-                    if (voices[i].lang.startsWith('en-GB') || voices[i].name.includes('UK English')) {
-                        australianVoice = voices[i];
-                        found = true;
-                        break;
-                    }
-                }
-            }
-            if (!found) {
-                // Last resort: pick any English voice
-                australianVoice = voices.find(voice => voice.lang.startsWith('en-'));
-            }
-            if (!australianVoice) {
-                console.warn("No suitable English voice found.");
-            }
-        }
+        /**
+         * Attempts to find and set an Australian English voice.
+         */
+        function setAustralianVoice() {
+            const voices = window.speechSynthesis.getVoices();
+            let found = false;
+            // Try to find an explicit Australian English voice
+            for (let i = 0; i < voices.length; i++) {
+                if (voices[i].lang === 'en-AU' || voices[i].name.includes('Australia')) {
+                    australianVoice = voices[i];
+                    found = true;
+                    break;
+                }
+            }
+            // Fallback to British English or generic English if Australian not found
+            if (!found) {
+                for (let i = 0; i < voices.length; i++) {
+                    if (voices[i].lang.startsWith('en-GB') || voices[i].name.includes('UK English')) {
+                        australianVoice = voices[i];
+                        found = true;
+                        break;
+                    }
+                }
+            }
+            if (!found) {
+                // Last resort: pick any English voice
+                australianVoice = voices.find(voice => voice.lang.startsWith('en-'));
+            }
+            if (!australianVoice) {
+                console.warn("No suitable English voice found.");
+            }
+        }
 
-        // Listen for voices being loaded (they might not be immediately available)
-        if ('speechSynthesis' in window) {
-            window.speechSynthesis.onvoiceschanged = setAustralianVoice;
-            // Call once initially, in case voices are already loaded
-            setAustralianVoice();
-        }
+        // Listen for voices being loaded (they might not be immediately available)
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = setAustralianVoice;
+            // Call once initially, in case voices are already loaded
+            setAustralianVoice();
+        }
 
-        /**
-         * Renders the shuffled riddle cards on the grid.
-         * Applies subtle random transforms for the "worn" look.
-         */
-        function renderRiddleCards() {
-            riddleCardGrid.innerHTML = ''; // Clear existing cards
-            shuffledRiddles.forEach((riddle, index) => {
-                const card = document.createElement('div');
-                card.classList.add('riddle-card');
-                card.textContent = riddle.name; // Display riddle name on card
-                card.dataset.index = index; // Store its index in the shuffled array
+        /**
+         * Renders the shuffled riddle cards on the grid.
+         * Applies subtle random transforms for the "worn" look.
+         */
+        function renderRiddleCards() {
+            riddleCardGrid.innerHTML = ''; // Clear existing cards
+            shuffledRiddles.forEach((riddle, index) => {
+                const card = document.createElement('div');
+                card.classList.add('riddle-card');
+                card.textContent = riddle.name; // Display riddle name on card
+                card.dataset.index = index; // Store its index in the shuffled array
 
-                // Apply subtle random transforms for "worn" look
-                const randomRotate = (Math.random() - 0.5) * 4; // -2deg to 2deg
-                const randomTranslateX = (Math.random() - 0.5) * 8; // -4px to 4px
-                const randomTranslateY = (Math.random() - 0.5) * 8; // -4px to 4px
-                card.style.transform = `rotate(${randomRotate}deg) translate(${randomTranslateX}px, ${randomTranslateY}px)`;
+                // Apply subtle random transforms for "worn" look
+                const randomRotate = (Math.random() - 0.5) * 4; // -2deg to 2deg
+                const randomTranslateX = (Math.random() - 0.5) * 8; // -4px to 4px
+                const randomTranslateY = (Math.random() - 0.5) * 8; // -4px to 4px
+                card.style.transform = `rotate(${randomRotate}deg) translate(${randomTranslateX}px, ${randomTranslateY}px)`;
 
-                card.addEventListener('click', () => {
-                    if (!card.classList.contains('answered')) { // Prevent re-clicking answered cards
-                        openRiddle(index, card);
-                    }
-                });
-                riddleCardGrid.appendChild(card);
-            });
-            riddleCardGrid.classList.remove('hidden');
-        }
+                card.addEventListener('click', () => {
+                    if (!card.classList.contains('answered')) { // Prevent re-clicking answered cards
+                        openRiddle(index, card);
+                    }
+                });
+                riddleCardGrid.appendChild(card);
+            });
+            riddleCardGrid.classList.remove('hidden');
+        }
 
-        let activeRiddleCardElement = null; // To keep track of the currently active card element
+        let activeRiddleCardElement = null; // To keep track of the currently active card element
 
-        /**
-         * Opens the riddle display overlay and populates it with the selected riddle's data.
-         * @param {number} index The index of the riddle to display.
-         * @param {HTMLElement} cardElement The actual DOM element of the card that was clicked.
-         */
-        function openRiddle(index, cardElement) {
+        /**
+         * Opens the riddle display overlay and populates it with the selected riddle's data.
+         * @param {number} index The index of the riddle to display.
+         * @param {HTMLElement} cardElement The actual DOM element of the card that was clicked.
+         */
+        function openRiddle(index, cardElement) {
+            console.log("openRiddle called for index:", index);
             currentRiddleIndex = index;
-            activeRiddleCardElement = cardElement; // Store reference to the card element
+            activeRiddleCardElement = cardElement;
             const riddle = shuffledRiddles[index];
 
-            // Reset display state
-            originalTextSection.classList.remove('hidden');
-            cluesSection.classList.add('hidden');
-            multiChoiceSection.classList.add('hidden');
-            answerSection.classList.add('hidden');
-            countdownTimer.classList.add('hidden');
-            clearTimeout(countdownInterval); // Clear any pending countdown
-            selectedOption = null; // Reset selected option
-            optionButtons.forEach(button => {
-                button.classList.remove('selected', 'correct', 'incorrect');
-                button.disabled = false; // Enable all buttons
-            });
-
-            // Populate initial riddle details with inverted order/styling
-            riddleTranslation.textContent = riddle.translation; // English translation now in this element
-            riddleOriginalText.textContent = riddle.originalText; // Original text now in this element
-            riddleAuthorDate.textContent = `Author/Date: ${riddle.authorDate}`;
-
-            // Populate clues (but keep hidden initially)
-            riddleClues.innerHTML = '';
-            riddle.clues.forEach(clue => {
-                const li = document.createElement('li');
-                li.textContent = clue;
-                riddleClues.appendChild(li);
-            });
-
-            // Populate multi-choice options (but keep hidden initially)
-            optionButtons[0].textContent = `A) ${riddle.multiChoice.A}`;
-            optionButtons[1].textContent = `B) ${riddle.multiChoice.B}`;
-            optionButtons[2].textContent = `C) ${riddle.multiChoice.C}`;
-            optionButtons[3].textContent = `D) ${riddle.multiChoice.D}`;
-
-            // Reset selected option styling on the multi-choice section if re-entering
-            optionButtons.forEach(button => button.classList.remove('selected'));
-
-
-            riddleDisplayOverlay.classList.add('active');
-        }
-
-        /**
-         * Closes the riddle display overlay.
-         */
-        function closeRiddleDisplay() {
-            window.speechSynthesis.cancel(); // Stop any ongoing speech
-            riddleDisplayOverlay.classList.remove('active');
-            clearTimeout(countdownInterval);
-            countdownTimer.classList.add('hidden'); // Ensure timer is hidden on close
-        }
-
-        /**
-         * Starts the 3-second countdown and then reveals the answer.
-         */
-        function startCountdownAndReveal() {
-            let timeLeft = 3;
-            countdownTimer.innerHTML = `<i class="mdi mdi-clock-outline"></i> Revealing in ${timeLeft}...`; // Added clock icon
-            countdownTimer.classList.remove('hidden');
-
-            // Disable all options during countdown
-            optionButtons.forEach(button => button.disabled = true);
-
-            countdownInterval = setInterval(() => {
-                timeLeft--;
-                countdownTimer.innerHTML = `<i class="mdi mdi-clock-outline"></i> Revealing in ${timeLeft}...`; // Added clock icon
-
-                if (timeLeft <= 0) {
-                    clearInterval(countdownInterval);
-                    revealAnswer();
-                }
-            }, 1000);
-        }
-
-        /**
-         * Reveals the correct answer and explanation.
-         */
-        function revealAnswer() {
-            const riddle = shuffledRiddles[currentRiddleIndex];
-            const correctAnswerKey = riddle.answer;
-            const isCorrect = (selectedOption === correctAnswerKey);
-
-            // Populate answer and explanation for display (MOVED HERE for reliability)
-            riddleAnswer.textContent = `${riddle.answer}) ${riddle.multiChoice[riddle.answer]}`;
-            riddleExplanation.textContent = riddle.explanation;
-
-            // Highlight correct/incorrect choices
-            optionButtons.forEach(button => {
-                const optionKey = button.dataset.option;
-                if (optionKey === correctAnswerKey) {
-                    button.classList.add('correct');
-                } else if (button.classList.contains('selected') && optionKey !== correctAnswerKey) {
-                    button.classList.add('incorrect');
-                }
-            });
-
-            // Speak the result with natural game show host variations
-            if (isCorrect) {
-                speakText("Correct!", 1.1, 1.2); // Slightly faster, slightly higher pitch
-            } else {
-                speakText("Incorrect!", 0.9, 0.9); // Slightly slower, slightly lower pitch
+            if (!riddle) {
+                console.error("Riddle data not found for index:", index);
+                alert("Error: Riddle data not found. Please try refreshing the game.");
+                return; // Exit if riddle data is missing
             }
 
-            // Store game result
-            gameResults.push({
-                riddleName: riddle.name,
-                selectedOption: selectedOption,
-                correctAnswer: correctAnswerKey,
-                isCorrect: isCorrect
-            });
+            try {
+                // Reset display state
+                originalTextSection.classList.remove('hidden');
+                cluesSection.classList.add('hidden');
+                multiChoiceSection.classList.add('hidden');
+                answerSection.classList.add('hidden');
+                countdownTimer.classList.add('hidden');
+                clearTimeout(countdownInterval);
+                selectedOption = null;
+                optionButtons.forEach(button => {
+                    button.classList.remove('selected', 'correct', 'incorrect');
+                    button.disabled = false;
+                });
 
-            countdownTimer.classList.add('hidden'); // Hide the countdown timer
-            answerSection.classList.remove('hidden'); // Show the answer section
-            multiChoiceSection.classList.add('hidden'); // Hide multi-choice after answer is shown
+                // Populate initial riddle details with inverted order/styling
+                riddleTranslation.textContent = riddle.translation || 'Translation missing.';
+                riddleOriginalText.textContent = riddle.originalText || 'Original text missing.';
+                riddleAuthorDate.textContent = `Author/Date: ${riddle.authorDate || 'Unknown'}`;
 
-            // Update the card color on the grid
-            if (activeRiddleCardElement) {
-                activeRiddleCardElement.classList.add('answered'); // Mark as answered
-                if (isCorrect) {
-                    activeRiddleCardElement.classList.add('correct-answer');
-                    activeRiddleCardElement.classList.remove('incorrect-answer');
+                // Populate clues
+                riddleClues.innerHTML = '';
+                if (riddle.clues && Array.isArray(riddle.clues) && riddle.clues.length > 0) {
+                    riddle.clues.forEach(clue => {
+                        const li = document.createElement('li');
+                        li.textContent = clue;
+                        riddleClues.appendChild(li);
+                    });
                 } else {
-                    activeRiddleCardElement.classList.add('incorrect-answer');
-                    activeRiddleCardElement.classList.remove('correct-answer');
+                    riddleClues.innerHTML = '<li>No clues available.</li>';
                 }
-            }
 
-            // Determine if all riddles are played
-            if (gameResults.length === riddles.length) {
-                nextRiddleButton.textContent = "View Score Sheet";
-            } else {
-                nextRiddleButton.textContent = "Next Riddle";
-            }
-        }
-
-        /**
-         * Displays the score sheet with game results.
-         */
-        function showScoreSheet() {
-            closeRiddleDisplay();
-            riddleCardGrid.classList.add('hidden'); // Hide the riddle cards
-
-            let correctCount = 0;
-            resultsTableBody.innerHTML = ''; // Clear previous results
-
-            gameResults.forEach(result => {
-                if (result.isCorrect) {
-                    correctCount++;
+                // Populate multi-choice options
+                if (riddle.multiChoice) {
+                    optionButtons[0].textContent = `A) ${riddle.multiChoice.A || 'Option A missing'}`;
+                    optionButtons[1].textContent = `B) ${riddle.multiChoice.B || 'Option B missing'}`;
+                    optionButtons[2].textContent = `C) ${riddle.multiChoice.C || 'Option C missing'}`;
+                    optionButtons[3].textContent = `D) ${riddle.multiChoice.D || 'Option D missing'}`;
+                } else {
+                    console.warn("Multi-choice options missing for riddle:", riddle.name);
+                    optionButtons.forEach((button, i) => button.textContent = `Option ${String.fromCharCode(65 + i)} missing`);
                 }
-                const row = resultsTableBody.insertRow();
-                row.insertCell().textContent = result.riddleName;
-                // Safely get the text for the selected option (in case no option was selected, though current flow prevents this)
-                const selectedOptionText = result.selectedOption ?
-                    `${result.selectedOption}) ${riddles.find(r => r.name === result.riddleName).multiChoice[result.selectedOption]}` :
-                    'No Answer';
-                row.insertCell().textContent = selectedOptionText;
-                row.insertCell().textContent = `${riddles.find(r => r.name === result.riddleName).multiChoice[result.correctAnswer]}`; // Display the correct answer text
-                const resultCell = row.insertCell();
-                resultCell.textContent = result.isCorrect ? 'Correct' : 'Incorrect';
-                resultCell.classList.add(result.isCorrect ? 'correct' : 'incorrect');
-            });
 
-            scoreSummary.textContent = `You got ${correctCount} out of ${riddles.length} riddles correct!`;
-            scoreSheetOverlay.classList.add('active');
-        }
+                // Reset selected option styling on the multi-choice section if re-entering
+                optionButtons.forEach(button => button.classList.remove('selected'));
 
-        /**
-         * Resets the game to its initial state.
-         */
-        function startNewGame() {
-            closeRiddleDisplay();
-            scoreSheetOverlay.classList.remove('active');
-            gameResults = []; // Clear all previous game results
-            startGameButton.classList.remove('hidden'); // Show the start button again
-            riddleCardGrid.classList.add('hidden'); // Hide the grid until started again
+                // Set overlay and card to active
+                riddleDisplayOverlay.classList.add('active');
+                riddleDisplayCard.style.opacity = '1'; /* Explicitly set opacity */
+                riddleDisplayCard.style.transform = 'scale(1)'; /* Explicitly set scale */
+                console.log('Riddle overlay and card set to active.');
 
-            // Reset all riddle cards to default state if they were already rendered
-            document.querySelectorAll('.riddle-card').forEach(card => {
-                card.classList.remove('answered', 'correct-answer', 'incorrect-answer');
-                card.style.backgroundColor = ''; // Reset background color to default CSS
-                card.style.transform = ''; // Reset any applied transforms
-            });
-        }
-
-
-        // Event Listeners
-
-        // Start Game button
-        startGameButton.addEventListener('click', () => {
-            startGameButton.classList.add('hidden');
-            shuffledRiddles = [...riddles]; // Create a shallow copy
-            shuffleArray(shuffledRiddles);
-            renderRiddleCards();
-        });
-
-        // Close riddle display button (mostly for accidental clicks, next button is primary flow)
-        closeRiddleDisplayButton.addEventListener('click', closeRiddleDisplay);
-
-        // Speak Riddle button
-        speakRiddleButton.addEventListener('click', () => {
-            speakText(riddleTranslation.textContent, 1, 1); // Riddle text, normal rate/pitch
-        });
-
-        // Next step button for original text section (Reveal Clues)
-        nextStepButton1.addEventListener('click', () => {
-            originalTextSection.classList.add('hidden');
-            cluesSection.classList.remove('hidden');
-        });
-
-        // Back to Riddle button
-        backToRiddleButton.addEventListener('click', () => {
-            cluesSection.classList.add('hidden');
-            originalTextSection.classList.remove('hidden');
-        });
-
-
-        // Next step button for clues section (Show Multi-Choice)
-        nextStepButton2.addEventListener('click', () => {
-            cluesSection.classList.add('hidden');
-            multiChoiceSection.classList.remove('hidden');
-        });
-
-        // Back to Clues button
-        backToCluesButton.addEventListener('click', () => {
-            multiChoiceSection.classList.add('hidden');
-            cluesSection.classList.remove('hidden');
-            // Re-enable options if they were disabled by a previous selection attempt
-            optionButtons.forEach(button => button.disabled = false);
-            // Clear countdown if running
-            clearTimeout(countdownInterval);
-            countdownTimer.classList.add('hidden');
-        });
-
-        // Multi-choice option buttons
-        optionButtons.forEach(button => {
-            button.addEventListener('click', (event) => {
-                // Ensure only one option can be selected
-                if (selectedOption) {
-                    document.querySelector(`[data-option="${selectedOption}"]`).classList.remove('selected');
-                }
-                selectedOption = event.target.dataset.option;
-                event.target.classList.add('selected');
-
-                // Start countdown after an option is selected
-                startCountdownAndReveal();
-            });
-        });
-
-        // Next Riddle / View Score Sheet button
-        nextRiddleButton.addEventListener('click', () => {
-            if (gameResults.length === riddles.length) {
-                // All riddles played, show score sheet
-                showScoreSheet();
-            } else {
-                // Not all riddles played, just close current riddle and return to grid
-                closeRiddleDisplay();
+            } catch (error) {
+                console.error('Error in openRiddle:', error);
+                alert('An unexpected error occurred while loading the riddle details. Please try again or check the browser console for details.');
+                closeRiddleDisplay(); // Close the overlay if an error occurs
             }
-        });
+        }
 
-        // Play New Game button on score sheet
-        playNewGameButton.addEventListener('click', startNewGame);
+        /**
+         * Closes the riddle display overlay.
+         */
+        function closeRiddleDisplay() {
+            window.speechSynthesis.cancel(); // Stop any ongoing speech
+            riddleDisplayOverlay.classList.remove('active');
+            clearTimeout(countdownInterval);
+            countdownTimer.classList.add('hidden'); // Ensure timer is hidden on close
+        }
 
-        // Initialize the game state when the page loads
-        window.onload = function() {
-            // No specific initial rendering needed here, as the Start Game button handles it.
-        };
+        /**
+         * Starts the 3-second countdown and then reveals the answer.
+         */
+        function startCountdownAndReveal() {
+            let timeLeft = 3;
+            countdownTimer.innerHTML = `<i class="mdi mdi-clock-outline"></i> Revealing in ${timeLeft}...`; // Added clock icon
+            countdownTimer.classList.remove('hidden');
 
-    </script>
+            // Disable all options during countdown
+            optionButtons.forEach(button => button.disabled = true);
+
+            countdownInterval = setInterval(() => {
+                timeLeft--;
+                countdownTimer.innerHTML = `<i class="mdi mdi-clock-outline"></i> Revealing in ${timeLeft}...`; // Added clock icon
+
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    revealAnswer();
+                }
+            }, 1000);
+        }
+
+        /**
+         * Reveals the correct answer and explanation.
+         */
+        function revealAnswer() {
+            const riddle = shuffledRiddles[currentRiddleIndex];
+            const correctAnswerKey = riddle.answer;
+            const isCorrect = (selectedOption === correctAnswerKey);
+
+            // Populate answer and explanation for display (MOVED HERE for reliability)
+            riddleAnswer.textContent = `${riddle.answer}) ${riddle.multiChoice[riddle.answer]}`;
+            riddleExplanation.textContent = riddle.explanation;
+
+            // Highlight correct/incorrect choices
+            optionButtons.forEach(button => {
+                const optionKey = button.dataset.option;
+                if (optionKey === correctAnswerKey) {
+                    button.classList.add('correct');
+                } else if (button.classList.contains('selected') && optionKey !== correctAnswerKey) {
+                    button.classList.add('incorrect');
+                }
+            });
+
+            // Speak the result with natural game show host variations
+            if (isCorrect) {
+                speakText("Correct!", 1.1, 1.2); // Slightly faster, slightly higher pitch
+            } else {
+                speakText("Incorrect!", 0.9, 0.9); // Slightly slower, slightly lower pitch
+            }
+
+            // Store game result
+            gameResults.push({
+                riddleName: riddle.name,
+                selectedOption: selectedOption,
+                correctAnswer: correctAnswerKey,
+                isCorrect: isCorrect
+            });
+
+            countdownTimer.classList.add('hidden'); // Hide the countdown timer
+            answerSection.classList.remove('hidden'); // Show the answer section
+            multiChoiceSection.classList.add('hidden'); // Hide multi-choice after answer is shown
+
+            // Update the card color on the grid
+            if (activeRiddleCardElement) {
+                activeRiddleCardElement.classList.add('answered'); // Mark as answered
+                if (isCorrect) {
+                    activeRiddleCardElement.classList.add('correct-answer');
+                    activeRiddleCardElement.classList.remove('incorrect-answer');
+                } else {
+                    activeRiddleCardElement.classList.add('incorrect-answer');
+                    activeRiddleCardElement.classList.remove('correct-answer');
+                }
+            }
+
+            // Determine if all riddles are played
+            if (gameResults.length === riddles.length) {
+                nextRiddleButton.textContent = "View Score Sheet";
+            } else {
+                nextRiddleButton.textContent = "Next Riddle";
+            }
+        }
+
+        /**
+         * Displays the score sheet with game results.
+         */
+        function showScoreSheet() {
+            closeRiddleDisplay();
+            riddleCardGrid.classList.add('hidden'); // Hide the riddle cards
+
+            let correctCount = 0;
+            resultsTableBody.innerHTML = ''; // Clear previous results
+
+            gameResults.forEach(result => {
+                if (result.isCorrect) {
+                    correctCount++;
+                }
+                const row = resultsTableBody.insertRow();
+                row.insertCell().textContent = result.riddleName;
+                // Safely get the text for the selected option (in case no option was selected, though current flow prevents this)
+                const selectedOptionText = result.selectedOption ?
+                    `${result.selectedOption}) ${riddles.find(r => r.name === result.riddleName).multiChoice[result.selectedOption]}` :
+                    'No Answer';
+                row.insertCell().textContent = selectedOptionText;
+                row.insertCell().textContent = `${riddles.find(r => r.name === result.riddleName).multiChoice[result.correctAnswer]}`; // Display the correct answer text
+                const resultCell = row.insertCell();
+                resultCell.textContent = result.isCorrect ? 'Correct' : 'Incorrect';
+                resultCell.classList.add(result.isCorrect ? 'correct' : 'incorrect');
+            });
+
+            scoreSummary.textContent = `You got ${correctCount} out of ${riddles.length} riddles correct!`;
+            scoreSheetOverlay.classList.add('active');
+        }
+
+        /**
+         * Resets the game to its initial state.
+         */
+        function startNewGame() {
+            closeRiddleDisplay();
+            scoreSheetOverlay.classList.remove('active');
+            gameResults = []; // Clear all previous game results
+            startGameButton.classList.remove('hidden'); // Show the start button again
+            riddleCardGrid.classList.add('hidden'); // Hide the grid until started again
+
+            // Reset all riddle cards to default state if they were already rendered
+            document.querySelectorAll('.riddle-card').forEach(card => {
+                card.classList.remove('answered', 'correct-answer', 'incorrect-answer');
+                card.style.backgroundColor = ''; // Reset background color to default CSS
+                card.style.transform = ''; // Reset any applied transforms
+            });
+        }
+
+
+        // Event Listeners
+
+        // Start Game button
+        startGameButton.addEventListener('click', () => {
+            startGameButton.classList.add('hidden');
+            shuffledRiddles = [...riddles]; // Create a shallow copy
+            shuffleArray(shuffledRiddles);
+            renderRiddleCards();
+        });
+
+        // Close riddle display button (mostly for accidental clicks, next button is primary flow)
+        closeRiddleDisplayButton.addEventListener('click', closeRiddleDisplay);
+
+        // Speak Riddle button
+        speakRiddleButton.addEventListener('click', () => {
+            speakText(riddleTranslation.textContent, 1, 1); // Riddle text, normal rate/pitch
+        });
+
+        // Next step button for original text section (Reveal Clues)
+        nextStepButton1.addEventListener('click', () => {
+            originalTextSection.classList.add('hidden');
+            cluesSection.classList.remove('hidden');
+        });
+
+        // Back to Riddle button
+        backToRiddleButton.addEventListener('click', () => {
+            cluesSection.classList.add('hidden');
+            originalTextSection.classList.remove('hidden');
+        });
+
+
+        // Next step button for clues section (Show Multi-Choice)
+        nextStepButton2.addEventListener('click', () => {
+            cluesSection.classList.add('hidden');
+            multiChoiceSection.classList.remove('hidden');
+        });
+
+        // Back to Clues button
+        backToCluesButton.addEventListener('click', () => {
+            multiChoiceSection.classList.add('hidden');
+            cluesSection.classList.remove('hidden');
+            // Re-enable options if they were disabled by a previous selection attempt
+            optionButtons.forEach(button => button.disabled = false);
+            // Clear countdown if running
+            clearTimeout(countdownInterval);
+            countdownTimer.classList.add('hidden');
+        });
+
+        // Multi-choice option buttons
+        optionButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                // Ensure only one option can be selected
+                if (selectedOption) {
+                    document.querySelector(`[data-option="${selectedOption}"]`).classList.remove('selected');
+                }
+                selectedOption = event.target.dataset.option;
+                event.target.classList.add('selected');
+
+                // Start countdown after an option is selected
+                startCountdownAndReveal();
+            });
+        });
+
+        // Next Riddle / View Score Sheet button
+        nextRiddleButton.addEventListener('click', () => {
+            if (gameResults.length === riddles.length) {
+                // All riddles played, show score sheet
+                showScoreSheet();
+            } else {
+                // Not all riddles played, just close current riddle and return to grid
+                closeRiddleDisplay();
+            }
+        });
+
+        // Play New Game button on score sheet
+        playNewGameButton.addEventListener('click', startNewGame);
+
+        // Initialize the game state when the page loads
+        window.onload = function() {
+            // No specific initial rendering needed here, as the Start Game button handles it.
+        };
+
+    </script>
 </body>
 </html>
-
