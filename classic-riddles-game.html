@@ -1,1 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classical Riddles Game</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - EB Garamond for "Ye Olde" feel -->
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Material Design Icons (MDI) CDN for symbols -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@6.2.95/css/materialdesignicons.min.css">
+
+    <style>
+        body {
+            font-family: 'EB Garamond', serif; /* Changed font to "Ye Olde" style */
+            background-color: #e6e0d0; /* Muted, aged paper background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+            box-sizing: border-box;
+            color: #3e2723; /* Dark brown text for antique feel */
+        }
+
+        .game-container {
+            max-width: 900px;
+            width: 100%;
+            background-color: #fcf9f2; /* Lighter aged paper */
+            border-radius: 1.5rem; /* Rounded corners */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2), inset 0 0 10px rgba(0, 0, 0, 0.05); /* Deeper shadow, subtle inner shadow */
+            padding: 1.5rem; /* Adjusted for smaller screens */
+            text-align: center;
+            border: 2px solid #d4c8b3; /* Subtle aged border */
+        }
+        @media (min-width: 640px) { /* Apply larger padding for sm and up */
+            .game-container {
+                padding: 2.5rem;
+            }
+        }
+
+        h1, h2, h3 {
+            font-family: 'EB Garamond', serif;
+            font-weight: 700; /* Bold for headings */
+            color: #2e1a0b; /* Even darker brown for headings */
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* Responsive grid for cards */
+            gap: 1.8rem; /* Slightly larger gap */
+            margin-top: 2.5rem;
+            justify-items: center;
+        }
+
+        .riddle-card {
+            background-color: #a0522d; /* Sienna brown for old paper */
+            color: #f5f5dc; /* Off-white text */
+            border-radius: 0.8rem; /* Slightly less perfect rounded corners */
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 180px; /* Fixed height for cards */
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3), inset 0 0 8px rgba(255, 255, 255, 0.1); /* Worn shadow */
+            font-size: 1.1rem;
+            font-weight: 700; /* Bolder text on cards */
+            text-align: center;
+            /* Random rotation and slight displacement will be applied via JS */
+        }
+
+        .riddle-card:hover:not(.answered) {
+            transform: translateY(-10px) scale(1.03); /* More pronounced lift */
+            box-shadow: 8px 8px 25px rgba(0, 0, 0, 0.4), inset 0 0 10px rgba(255, 255, 255, 0.15);
+        }
+
+        .riddle-card.correct-answer {
+            background-color: #388e3c; /* Darker green for correct */
+        }
+
+        .riddle-card.incorrect-answer {
+            background-color: #d32f2f; /* Darker red for incorrect */
+        }
+
+        .riddle-card.answered {
+            cursor: not-allowed;
+            opacity: 0.9;
+        }
+
+        /* Riddle display modal/overlay */
+        .riddle-display-overlay, .score-sheet-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8); /* Darker overlay */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .riddle-display-overlay.active, .score-sheet-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .riddle-display-card, .score-sheet-card {
+            background-color: #fff8dc; /* Creamy background for inner card */
+            border-radius: 1.5rem;
+            padding: 2rem; /* Adjusted for smaller screens */
+            max-width: 750px; /* Slightly wider */
+            width: 90%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35); /* Prominent shadow */
+            position: relative;
+            transform: scale(0.9);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            border: 3px solid #b79c7d; /* More distinct border */
+        }
+
+        @media (min-width: 640px) { /* Apply larger padding for sm and up */
+            .riddle-display-card, .score-sheet-card {
+                padding: 3rem;
+            }
+        }
+
+        .riddle-content-section {
+            margin-bottom: 1.8rem; /* Increased margin */
+            padding-bottom: 1.8rem;
+            border-bottom: 1px dashed #c0a880; /* Dashed aged border */
+        }
+
+        .riddle-content-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .multi-choice-options button {
+            background-color: #d2b48c; /* Tan color for options */
+            color: #3e2723; /* Dark brown text */
+            padding: 0.8rem 1.5rem;
+            border-radius: 0.75rem;
+            margin: 0.6rem;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.1s ease;
+            width: calc(50% - 1.2rem); /* Two columns on desktop with gap */
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.15);
+        }
+
+        @media (max-width: 640px) {
+            .multi-choice-options button {
+                width: calc(100% - 1.2rem); /* Full width on mobile */
+            }
+        }
+
+        .multi-choice-options button:hover:not(:disabled) {
+            background-color: #c09b6a; /* Darker tan on hover */
+            transform: translateY(-3px);
+            box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.25);
+        }
+
+        .multi-choice-options button.selected {
+            background-color: #8b4513; /* Saddle brown for selected */
+            color: white;
+            box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .multi-choice-options button.correct {
+            background-color: #2e8b57; /* Sea green for correct */
+            color: white;
+        }
+
+        .multi-choice-options button.incorrect {
+            background-color: #b22222; /* Firebrick red for incorrect */
+            color: white;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 2.2rem; /* Larger close button */
+            color: #b79c7d; /* Matches aged border color */
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .close-button:hover {
+            color: #a08c6c;
+        }
+
+        /* Utility classes for hiding/showing elements */
+        .hidden {
+            display: none;
+        }
+
+        /* Button styling */
+        .btn {
+            padding: 0.8rem 2.2rem;
+            border-radius: 0.8rem;
+            font-size: 1.15rem; /* Slightly larger text */
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-transform: uppercase; /* Game show feel */
+            letter-spacing: 0.05em;
+        }
+
+        .btn-primary {
+            background-color: #8b4513; /* Saddle brown */
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background-color: #a0522d; /* Sienna brown */
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: #c0a880; /* Muted gold/tan */
+            color: #3e2723; /* Dark brown text */
+            margin-top: 1.2rem; /* Increased margin */
+            display: flex; /* For icon centering */
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem; /* Space between icon and text */
+            padding: 0.8rem 1.5rem; /* Adjust padding for icons */
+            font-size: 1.05rem; /* Smaller for clarity next to icon */
+        }
+
+        .btn-secondary:hover {
+            background-color: #d2b48c; /* Lighter gold/tan */
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary i {
+            font-size: 1.4em; /* Adjust icon size */
+        }
+
+        .counter-text {
+            font-size: 2.8rem; /* Larger timer text */
+            font-weight: 700;
+            color: #8b4513; /* Saddle brown for timer */
+            margin-top: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+        }
+
+        .counter-text i {
+            font-size: 1.2em; /* Ensure clock icon is visible */
+        }
+
+        .score-sheet-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem; /* Increased margin */
+        }
+
+        .score-sheet-table th, .score-sheet-table td {
+            padding: 0.9rem; /* More padding in table */
+            border: 1px solid #d4c8b3; /* Matches container border */
+            text-align: left;
+            color: #3e2723;
+        }
+
+        .score-sheet-table th {
+            background-color: #f0ead8; /* Lighter aged paper */
+            font-weight: 700;
+            color: #2e1a0b;
+        }
+
+        .score-sheet-table tr:nth-child(even) {
+            background-color: #fcf9f2; /* Subtle stripe */
+        }
+
+        .score-sheet-table td.correct {
+            color: #2f855a; /* Darker green */
+            font-weight: 600;
+        }
+
+        .score-sheet-table td.incorrect {
+            color: #c53030; /* Darker red */
+            font-weight: 600;
+        }
+
+        /* Specific styles for riddle text display */
+        .riddle-display-card .riddle-translation-text {
+            font-size: 1.8rem; /* Larger font for translation */
+            font-weight: 700; /* Bold for translation */
+            color: #2e1a0b; /* Darker brown */
+            margin-bottom: 0.5rem;
+        }
+
+        .riddle-display-card .riddle-original-text {
+            font-size: 1.1rem; /* Smaller font for original text */
+            font-style: italic; /* Italic for original text */
+            font-weight: 400; /* Not bold */
+            color: #5d4037; /* Slightly lighter brown for original text */
+            margin-top: 0;
+        }
+
+        .speak-riddle-button {
+            background-color: #c0a880; /* Muted gold/tan */
+            color: #3e2723; /* Dark brown text */
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            margin-top: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .speak-riddle-button:hover {
+            background-color: #d2b48c;
+            transform: translateY(-2px);
+        }
+
+        .speak-riddle-button i {
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1 class="text-4xl mb-6">Classical Riddles Challenge</h1>
+        <p class="text-gray-600 mb-4">Uncover ancient wisdom and test your wits!</p>
+        <p class="text-sm text-gray-500 mt-4">Brought to you by Woomamai Products &copy; 2025</p>
+
+        <button id="startGameButton" class="btn btn-primary mt-6">Start Game</button>
+
+
+        <div id="riddleCardGrid" class="card-grid hidden">
+            <!-- Riddle cards will be populated here by JavaScript -->
+        </div>
+
+        <!-- Riddle Display Overlay -->
+        <div id="riddleDisplayOverlay" class="riddle-display-overlay">
+            <div id="riddleDisplayCard" class="riddle-display-card">
+                <button class="close-button" id="closeRiddleDisplay">&times;</button>
+                <div class="riddle-content-section" id="originalTextSection">
+                    <h2 class="text-2xl mb-3">The Riddle</h2>
+                    <!-- English Translation (Larger, Bold) -->
+                    <p class="riddle-translation-text" id="riddleTranslation"></p>
+                    <!-- Original Text (Smaller, Italic) -->
+                    <p class="riddle-original-text" id="riddleOriginalText"></p>
+
+                    <p class="text-sm text-gray-500 mt-2" id="riddleAuthorDate"></p>
+                    <button id="speakRiddleButton" class="speak-riddle-button">
+                        <i class="mdi mdi-volume-high"></i> Speak Riddle
+                    </button>
+                    <button id="nextStepButton1" class="btn btn-secondary mt-4">
+                        Reveal Clues <i class="mdi mdi-arrow-right-bold"></i>
+                    </button>
+                </div>
+
+                <div class="riddle-content-section hidden" id="cluesSection">
+                    <h2 class="text-2xl mb-3">Clues</h2>
+                    <ul class="list-disc list-inside text-lg text-gray-800" id="riddleClues"></ul>
+                    <div class="flex justify-center gap-4">
+                        <button id="backToRiddleButton" class="btn btn-secondary mt-4">
+                            <i class="mdi mdi-arrow-left-bold"></i> Back to Riddle
+                        </button>
+                        <button id="nextStepButton2" class="btn btn-secondary mt-4">
+                            Show Multi-Choice <i class="mdi mdi-arrow-right-bold"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="riddle-content-section hidden" id="multiChoiceSection">
+                    <h2 class="text-2xl mb-3">Your Answer?</h2>
+                    <div class="multi-choice-options grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <button class="option-btn" data-option="A">A) Option A</button>
+                        <button class="option-btn" data-option="B">B) Option B</button>
+                        <button class="option-btn" data-option="C">C) Option C</button>
+                        <button class="option-btn" data-option="D">D) Option D</button>
+                    </div>
+                    <div id="countdownTimer" class="counter-text hidden"></div>
+                    <div class="flex justify-center gap-4">
+                        <button id="backToCluesButton" class="btn btn-secondary mt-4">
+                            <i class="mdi mdi-arrow-left-bold"></i> Back to Clues
+                        </button>
+                        <!-- No forward button here, selection triggers countdown -->
+                    </div>
+                </div>
+
+                <div class="riddle-content-section hidden" id="answerSection">
+                    <h2 class="text-2xl mb-3">The Answer Is...</h2>
+                    <p class="text-3xl font-bold text-indigo-700 mb-4" id="riddleAnswer"></p>
+                    <h3 class="text-xl mb-2">Explanation:</h3>
+                    <p class="text-lg text-gray-800" id="riddleExplanation"></p>
+                    <button id="nextRiddleButton" class="btn btn-primary mt-6">Next Riddle</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Score Sheet Overlay -->
+        <div id="scoreSheetOverlay" class="score-sheet-overlay">
+            <div id="scoreSheetCard" class="score-sheet-card">
+                <h2 class="text-3xl mb-4">Game Over! Your Score:</h2>
+                <div id="scoreSummary" class="text-2xl mb-4"></div>
+                <table id="resultsTable" class="score-sheet-table">
+                    <thead>
+                        <tr>
+                            <th>Riddle</th>
+                            <th>Your Answer</th>
+                            <th>Correct Answer</th>
+                            <th>Result</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Results will be populated here -->
+                    </tbody>
+                </table>
+                <button id="playNewGameButton" class="btn btn-primary mt-6">Play New Game</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Array of classical riddles
+        const riddles = [
+            {
+                name: "The Weaponed Ox",
+                authorDate: "Exeter Book (c. 10th C.)",
+                originalText: "Ic þa wiht geseah wæpnedcynnes, geoguðmyrþe grædig; him on gafol forlet ferðfriþende feower wellan scire sceotan, on gesceap þeotan. Mon maþelade, se þe me gesægde: “Seo wiht, gif hio gedygeð, duna briceð; gif he tobirsteð, bindeð cwice.”",
+                translation: "I saw a creature of the weaponed kind/male sex, greedy with youthful joy; as tribute for him the life-saving one let four springs shoot forth brightly, murmur to his delight. Someone spoke, the one who said to me: “That creature, if she survives, breaks the hills; if he dies, binds the living.”",
+                clues: ["It's an animal often associated with farm work and strength.", "Its hide is valuable after its death."],
+                multiChoice: {
+                    A: "A War Horse",
+                    B: "A Battering Ram",
+                    C: "An Ox",
+                    D: "A Wild Boar"
+                },
+                answer: "C",
+                explanation: "An ox (or bullock) has horns ('weaponed kind'), is used to plow fields ('breaks the hills'), and its hide can be used for leather ('binds the living') after it dies. The 'four wells' can refer to udders if it's a cow or simply a poetic description."
+            },
+            {
+                name: "The Shell-Born Life",
+                authorDate: "Eusebius (c. 7th C.)",
+                originalText: "Cum corio ante meo tectus vestitus et essem, Tunc nihil ore cibi gustabam, oculisque videre Non potui. Pascor nunc escis, pelle detectus Vivo, sed exanimis transivi viscera matris.",
+                translation: "Before, when I was covered and dressed in my shell, Then I tasted nothing of food with my mouth, and I was unable to see With my eyes. Now I am nourished on food, I live Stripped of my skin, but inanimate, I traversed my mother’s innermost parts.",
+                clues: ["It begins life encased and without sensation.", "It eventually feeds and lives freely after shedding its initial covering."],
+                multiChoice: {
+                    A: "A Seedling",
+                    B: "A Caterpillar",
+                    C: "A Chick",
+                    D: "A Tadpole"
+                },
+                answer: "C",
+                explanation: "A chick is enclosed in an egg ('covered and dressed in my shell'), cannot eat or see before hatching, then is nourished and lives ('stripped of my skin' refers to shedding the eggshell). It was 'inanimate' inside the egg."
+            },
+            {
+                name: "The Transformed Exile",
+                authorDate: "Tatwine (c. 7th C.)",
+                originalText: "Exul sum generis factus motante figura. Postquam me perdendo ferox invaserat hostis, Expertem penitus vita formaque relinquens, Officinae servum deinceps me iussit haberi.",
+                translation: "I was made an exile from my kind by my changing form. After a fierce enemy entered me, destroying me, Leaving me completely without life and shape, He then ordered me to be kept as a slave of the workshop.",
+                clues: ["It's created through a process that involves intense heat and destruction.", "It serves a utilitarian purpose in a work environment."],
+                multiChoice: {
+                    A: "Ash",
+                    B: "Charcoal",
+                    C: "Rust",
+                    D: "Clay"
+                },
+                answer: "B",
+                explanation: "Charcoal is wood that has been transformed by fire ('fierce enemy'), losing its original form and life. It then becomes useful fuel ('slave of the workshop')."
+            },
+            {
+                name: "The Dry-Footed Walker",
+                authorDate: "Aldhelm (c. 7th C.)",
+                originalText: "Pergo super latices plantis suffulta quaternis Nec tamen in limphas vereor quod mergar aquosas, Sed pariter terras et flumina calco pedestris; Nec natura sinit celerem natare per amnem, Pontibus aut ratibus fluvios transire feroces; Quin potius pedibus gradior super aequora siccis.",
+                translation: "I proceed on waters propped up on my four feet, And yet I do not fear being drowned in the watery lakes, But I go on foot equally on land and stream. Nature does not permit me to swim through the fast flow Nor to cross fierce rivers on bridges or boats; Rather, I step with dry feet over the water.",
+                clues: ["It's an animal often associated with farm work and strength.", "Its hide is valuable after its death."],
+                multiChoice: {
+                    A: "A Duck",
+                    B: "A Heron",
+                    C: "A Water-insect",
+                    D: "A Spider"
+                },
+                answer: "C",
+                explanation: "A water-insect, such as a water strider, uses surface tension to walk on water without sinking or getting its 'feet' wet."
+            },
+            {
+                name: "The River's Namesake",
+                authorDate: "Symphosius (c. 6th C.)",
+                originalText: "A fluvio dicor, fluvius vel dicitur ex me. Iunctaque sum vento, quae sum velocior ipso; Et mihi dat ventus natos nec quaero maritum.",
+                translation: "I am named after a river, or else the river is named after me. And I am joined to the wind, which I am faster than; And the wind gives me sons, I do not seek a mate.",
+                clues: ["Its name is also the name of a major river.", "It is known for its speed and can be fierce."],
+                multiChoice: {
+                    A: "A Leopard",
+                    B: "A Lion",
+                    C: "A Puma",
+                    D: "A Tiger"
+                },
+                answer: "D",
+                explanation: "The Tigris River shares its name with the animal, the tiger. Tigers are known for their speed ('faster than wind') and ferocity. The 'wind gives me sons' is a poetic way to refer to its cubs or swiftness."
+            },
+            {
+                name: "The Grinding City",
+                authorDate: "Tatwine (c. 7th C.)",
+                originalText: "Natam me gelido terrae de viscere dicunt, Inclita Romanis sed et urbs dudum vocitabar. Sordida, calcantum pedibus nunc sternor, inermis. Ridet acumine qui rodens me lingit abunde.",
+                translation: "They say I was born from the icy inside of the earth, But previously I used to be called a famous city by the Romans. Now, dirty, unarmed, I am scattered underfoot. The nibbling one who licks me plentifully smiles with a sharpened point.",
+                clues: ["It originates from the earth.", "It is used to sharpen tools or blades."],
+                multiChoice: {
+                    A: "A Millstone",
+                    B: "A Grindstone",
+                    C: "A Whetstone",
+                    D: "A Granite Slab"
+                },
+                answer: "C",
+                explanation: "A whetstone is a type of stone ('icy inside of the earth') used to sharpen tools, and its name 'cote' could historically refer to a place or a Roman family name, hence the 'famous city' reference. It is 'underfoot' during use."
+            },
+            {
+                name: "The Royal Sleeper",
+                authorDate: "Aldhelm (c. 7th C.)",
+                originalText: "Setiger in silvis armatos dentibus apros Cornigerosque simul cervos licet ore rudentes Contero nec parcens ursorum quasso lacertos; Ora cruenta ferens morsus rictusque luporum Horridus haud vereor regali culmine fretus; Dormio nam patulis, non claudens lumina, gemmis.",
+                translation: "Shaggy, I crush boars armed with teeth in the woods And at the same time antlered stags, although they roar with their mouth, And sparing nothing, I quash bears’ arms; Bearing my bloody mouth, wolves’ bite and maw, I, frightening and supported by royal eminence, do not fear at all; For I sleep with my eyes wide open, not closing them.",
+                clues: ["It is a fierce predator, often associated with power.", "It is said to sleep with its eyes open, a unique characteristic."],
+                multiChoice: {
+                    A: "A Bear",
+                    B: "A Wolf",
+                    C: "A Lion",
+                    D: "A Tiger"
+                },
+                answer: "C",
+                explanation: "The riddle describes a powerful jungle beast ('crush boars', 'quash bears') and alludes to its majestic nature ('royal eminence'). The key clue is its folkloric ability to sleep with its eyes open, a trait often attributed to lions."
+            },
+            {
+                name: "The Dual Being",
+                authorDate: "Symphosius (c. 6th C.)",
+                originalText: "Quattuor insignis pedibus manibusque duabus Dissimilis mihi sum, quia sum non unus et unus. Et vehor et gradior, quia me mea corpora portant.",
+                translation: "Famous for my four feet and two hands I am unlike myself, because I am not one and the same. I both ride and walk because my bodies carry me.",
+                clues: ["It is a mythical creature.", "It combines the characteristics of two different beings."],
+                multiChoice: {
+                    A: "A Minotaur",
+                    B: "A Griffin",
+                    C: "A Centaur",
+                    D: "A Sphinx"
+                },
+                answer: "C",
+                explanation: "A Centaur is a mythological creature composed of a human torso (two hands) and a horse body (four feet), embodying the paradox of being 'not one and one' as it combines two forms."
+            },
+            {
+                name: "The Sky-Traveling Swimmer",
+                authorDate: "Eusebius (c. 7th C.)",
+                originalText: "Non volo penniger aethram; non vago rura pedester. Sic manibus pedibusque carens, me pennula fulcit. Trano per undisonas ac turgida cerula lymphas, Astriferumque polum et sublime peragro tribunal.",
+                translation: "I do not fly, winged, through the air; I do not roam the fields on foot. Thus lacking hands and feet, a fin supports me. I swim through the roaring waters and swollen sea, And I travel through the starry sky and the judgement seat on high.",
+                clues: ["It is an aquatic creature that uses fins for movement.", "It is metaphorically associated with the sky or celestial bodies."],
+                multiChoice: {
+                    A: "A Whale",
+                    B: "A Dolphin",
+                    C: "A Fish",
+                    D: "A Starfish"
+                },
+                answer: "C",
+                explanation: "A fish swims with fins, lacks limbs, and can be metaphorically linked to the 'starry sky' (e.g., the constellation Pisces or other symbolic interpretations)."
+            },
+            {
+                name: "The Crushed Core",
+                authorDate: "Aldhelm (c. 7th C.)",
+                originalText: "Sum niger exterius rugoso cortice tectus, Sed tamen interius candentem gesto medullam. Dilicias, epulas regum luxusque ciborum, Ius simul et pulpas battutas condo culinae; Sed me subnixum nulla virtute videbis, Viscera ni fuerint nitidis quassata medullis.",
+                translation: "I am black on the outside, covered with a wrinkled shell, Yet inside I bear a shining core. Kitchen’s delights, kings’ dishes, and culinary luxuries, Sauce and also stewed meats I flavour; But you will see me to be based on no strength If my innards are not crushed for their gleaming core.",
+                clues: ["It is small, dark, and has a wrinkled exterior.", "Its essential quality or flavor is released when it is ground or crushed."],
+                multiChoice: {
+                    A: "A Coffee Bean",
+                    B: "An Olive Pit",
+                    C: "Pepper",
+                    D: "A Nutmeg Seed"
+                },
+                answer: "C",
+                explanation: "Pepper is black and wrinkled, contains a pungent 'core' (its flavor), and is crushed (ground) to release its taste, making it a staple in various dishes."
+            }
+        ];
+
+        let shuffledRiddles = [];
+        let currentRiddleIndex = -1;
+        let countdownInterval;
+        let selectedOption = null;
+        let gameResults = []; // Stores results for each riddle played
+        let australianVoice = null; // Variable to store the selected Australian voice
+
+        // Get DOM elements
+        const startGameButton = document.getElementById('startGameButton');
+        const riddleCardGrid = document.getElementById('riddleCardGrid');
+        const riddleDisplayOverlay = document.getElementById('riddleDisplayOverlay');
+        const riddleDisplayCard = document.getElementById('riddleDisplayCard');
+        const closeRiddleDisplayButton = document.getElementById('closeRiddleDisplay');
+        const riddleOriginalText = document.getElementById('riddleOriginalText'); // This now holds the original language text
+        const riddleTranslation = document.getElementById('riddleTranslation'); // This now holds the English translation
+        const riddleAuthorDate = document.getElementById('riddleAuthorDate');
+        const riddleClues = document.getElementById('riddleClues');
+        const riddleAnswer = document.getElementById('riddleAnswer');
+        const riddleExplanation = document.getElementById('riddleExplanation');
+        const countdownTimer = document.getElementById('countdownTimer');
+        const nextRiddleButton = document.getElementById('nextRiddleButton');
+        const speakRiddleButton = document.getElementById('speakRiddleButton'); // New speak button
+
+        // New back buttons
+        const backToRiddleButton = document.getElementById('backToRiddleButton');
+        const backToCluesButton = document.getElementById('backToCluesButton');
+
+        // Section containers for progressive reveal
+        const originalTextSection = document.getElementById('originalTextSection');
+        const cluesSection = document.getElementById('cluesSection');
+        const multiChoiceSection = document.getElementById('multiChoiceSection');
+        const answerSection = document.getElementById('answerSection');
+
+        // Next step buttons
+        const nextStepButton1 = document.getElementById('nextStepButton1');
+        const nextStepButton2 = document.getElementById('nextStepButton2');
+
+        // Multi-choice option buttons
+        const optionButtons = document.querySelectorAll('.option-btn');
+
+        // Score sheet elements
+        const scoreSheetOverlay = document.getElementById('scoreSheetOverlay');
+        const scoreSheetCard = document.getElementById('scoreSheetCard');
+        const scoreSummary = document.getElementById('scoreSummary');
+        const resultsTableBody = document.querySelector('#resultsTable tbody');
+        const playNewGameButton = document.getElementById('playNewGameButton');
+
+        /**
+         * Shuffles an array in place using the Fisher-Yates (Knuth) algorithm.
+         * @param {Array} array The array to shuffle.
+         */
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+            }
+        }
+
+        /**
+         * Speaks a given text using the Web Speech API.
+         * Attempts to use an Australian voice.
+         * @param {string} text The text to speak.
+         * @param {number} [rate=1] Speech rate (0.1 to 10).
+         * @param {number} [pitch=1] Speech pitch (0 to 2).
+         */
+        function speakText(text, rate = 1, pitch = 1) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); // Stop any current speech
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.volume = 1;
+                utterance.rate = rate;
+                utterance.pitch = pitch;
+
+                if (australianVoice) {
+                    utterance.voice = australianVoice;
+                } else {
+                    console.warn("Australian voice not found, using default voice.");
+                }
+                window.speechSynthesis.speak(utterance);
+            } else {
+                console.warn("Speech Synthesis not supported in this browser.");
+            }
+        }
+
+        /**
+         * Attempts to find and set an Australian English voice.
+         */
+        function setAustralianVoice() {
+            const voices = window.speechSynthesis.getVoices();
+            let found = false;
+            // Try to find an explicit Australian English voice
+            for (let i = 0; i < voices.length; i++) {
+                if (voices[i].lang === 'en-AU' || voices[i].name.includes('Australia')) {
+                    australianVoice = voices[i];
+                    found = true;
+                    break;
+                }
+            }
+            // Fallback to British English or generic English if Australian not found
+            if (!found) {
+                for (let i = 0; i < voices.length; i++) {
+                    if (voices[i].lang.startsWith('en-GB') || voices[i].name.includes('UK English')) {
+                        australianVoice = voices[i];
+                        found = true;
+                        break;
+                    }
+                }
+            }
+            if (!found) {
+                // Last resort: pick any English voice
+                australianVoice = voices.find(voice => voice.lang.startsWith('en-'));
+            }
+            if (!australianVoice) {
+                console.warn("No suitable English voice found.");
+            }
+        }
+
+        // Listen for voices being loaded (they might not be immediately available)
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = setAustralianVoice;
+            // Call once initially, in case voices are already loaded
+            setAustralianVoice();
+        }
+
+        /**
+         * Renders the shuffled riddle cards on the grid.
+         * Applies subtle random transforms for the "worn" look.
+         */
+        function renderRiddleCards() {
+            riddleCardGrid.innerHTML = ''; // Clear existing cards
+            shuffledRiddles.forEach((riddle, index) => {
+                const card = document.createElement('div');
+                card.classList.add('riddle-card');
+                card.textContent = riddle.name; // Display riddle name on card
+                card.dataset.index = index; // Store its index in the shuffled array
+
+                // Apply subtle random transforms for "worn" look
+                const randomRotate = (Math.random() - 0.5) * 4; // -2deg to 2deg
+                const randomTranslateX = (Math.random() - 0.5) * 8; // -4px to 4px
+                const randomTranslateY = (Math.random() - 0.5) * 8; // -4px to 4px
+                card.style.transform = `rotate(${randomRotate}deg) translate(${randomTranslateX}px, ${randomTranslateY}px)`;
+
+                card.addEventListener('click', () => {
+                    if (!card.classList.contains('answered')) { // Prevent re-clicking answered cards
+                        openRiddle(index, card);
+                    }
+                });
+                riddleCardGrid.appendChild(card);
+            });
+            riddleCardGrid.classList.remove('hidden');
+        }
+
+        let activeRiddleCardElement = null; // To keep track of the currently active card element
+
+        /**
+         * Opens the riddle display overlay and populates it with the selected riddle's data.
+         * @param {number} index The index of the riddle to display.
+         * @param {HTMLElement} cardElement The actual DOM element of the card that was clicked.
+         */
+        function openRiddle(index, cardElement) {
+            currentRiddleIndex = index;
+            activeRiddleCardElement = cardElement; // Store reference to the card element
+            const riddle = shuffledRiddles[index];
+
+            // Reset display state
+            originalTextSection.classList.remove('hidden');
+            cluesSection.classList.add('hidden');
+            multiChoiceSection.classList.add('hidden');
+            answerSection.classList.add('hidden');
+            countdownTimer.classList.add('hidden');
+            clearTimeout(countdownInterval); // Clear any pending countdown
+            selectedOption = null; // Reset selected option
+            optionButtons.forEach(button => {
+                button.classList.remove('selected', 'correct', 'incorrect');
+                button.disabled = false; // Enable all buttons
+            });
+
+            // Populate initial riddle details with inverted order/styling
+            riddleTranslation.textContent = riddle.translation; // English translation now in this element
+            riddleOriginalText.textContent = riddle.originalText; // Original text now in this element
+            riddleAuthorDate.textContent = `Author/Date: ${riddle.authorDate}`;
+
+            // Populate clues (but keep hidden initially)
+            riddleClues.innerHTML = '';
+            riddle.clues.forEach(clue => {
+                const li = document.createElement('li');
+                li.textContent = clue;
+                riddleClues.appendChild(li);
+            });
+
+            // Populate multi-choice options (but keep hidden initially)
+            optionButtons[0].textContent = `A) ${riddle.multiChoice.A}`;
+            optionButtons[1].textContent = `B) ${riddle.multiChoice.B}`;
+            optionButtons[2].textContent = `C) ${riddle.multiChoice.C}`;
+            optionButtons[3].textContent = `D) ${riddle.multiChoice.D}`;
+
+            // Reset selected option styling on the multi-choice section if re-entering
+            optionButtons.forEach(button => button.classList.remove('selected'));
+
+
+            riddleDisplayOverlay.classList.add('active');
+        }
+
+        /**
+         * Closes the riddle display overlay.
+         */
+        function closeRiddleDisplay() {
+            window.speechSynthesis.cancel(); // Stop any ongoing speech
+            riddleDisplayOverlay.classList.remove('active');
+            clearTimeout(countdownInterval);
+            countdownTimer.classList.add('hidden'); // Ensure timer is hidden on close
+        }
+
+        /**
+         * Starts the 3-second countdown and then reveals the answer.
+         */
+        function startCountdownAndReveal() {
+            let timeLeft = 3;
+            countdownTimer.innerHTML = `<i class="mdi mdi-clock-outline"></i> Revealing in ${timeLeft}...`; // Added clock icon
+            countdownTimer.classList.remove('hidden');
+
+            // Disable all options during countdown
+            optionButtons.forEach(button => button.disabled = true);
+
+            countdownInterval = setInterval(() => {
+                timeLeft--;
+                countdownTimer.innerHTML = `<i class="mdi mdi-clock-outline"></i> Revealing in ${timeLeft}...`; // Added clock icon
+
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    revealAnswer();
+                }
+            }, 1000);
+        }
+
+        /**
+         * Reveals the correct answer and explanation.
+         */
+        function revealAnswer() {
+            const riddle = shuffledRiddles[currentRiddleIndex];
+            const correctAnswerKey = riddle.answer;
+            const isCorrect = (selectedOption === correctAnswerKey);
+
+            // Populate answer and explanation for display (MOVED HERE for reliability)
+            riddleAnswer.textContent = `${riddle.answer}) ${riddle.multiChoice[riddle.answer]}`;
+            riddleExplanation.textContent = riddle.explanation;
+
+            // Highlight correct/incorrect choices
+            optionButtons.forEach(button => {
+                const optionKey = button.dataset.option;
+                if (optionKey === correctAnswerKey) {
+                    button.classList.add('correct');
+                } else if (button.classList.contains('selected') && optionKey !== correctAnswerKey) {
+                    button.classList.add('incorrect');
+                }
+            });
+
+            // Speak the result with natural game show host variations
+            if (isCorrect) {
+                speakText("Correct!", 1.1, 1.2); // Slightly faster, slightly higher pitch
+            } else {
+                speakText("Incorrect!", 0.9, 0.9); // Slightly slower, slightly lower pitch
+            }
+
+            // Store game result
+            gameResults.push({
+                riddleName: riddle.name,
+                selectedOption: selectedOption,
+                correctAnswer: correctAnswerKey,
+                isCorrect: isCorrect
+            });
+
+            countdownTimer.classList.add('hidden'); // Hide the countdown timer
+            answerSection.classList.remove('hidden'); // Show the answer section
+            multiChoiceSection.classList.add('hidden'); // Hide multi-choice after answer is shown
+
+            // Update the card color on the grid
+            if (activeRiddleCardElement) {
+                activeRiddleCardElement.classList.add('answered'); // Mark as answered
+                if (isCorrect) {
+                    activeRiddleCardElement.classList.add('correct-answer');
+                    activeRiddleCardElement.classList.remove('incorrect-answer');
+                } else {
+                    activeRiddleCardElement.classList.add('incorrect-answer');
+                    activeRiddleCardElement.classList.remove('correct-answer');
+                }
+            }
+
+            // Determine if all riddles are played
+            if (gameResults.length === riddles.length) {
+                nextRiddleButton.textContent = "View Score Sheet";
+            } else {
+                nextRiddleButton.textContent = "Next Riddle";
+            }
+        }
+
+        /**
+         * Displays the score sheet with game results.
+         */
+        function showScoreSheet() {
+            closeRiddleDisplay();
+            riddleCardGrid.classList.add('hidden'); // Hide the riddle cards
+
+            let correctCount = 0;
+            resultsTableBody.innerHTML = ''; // Clear previous results
+
+            gameResults.forEach(result => {
+                if (result.isCorrect) {
+                    correctCount++;
+                }
+                const row = resultsTableBody.insertRow();
+                row.insertCell().textContent = result.riddleName;
+                // Safely get the text for the selected option (in case no option was selected, though current flow prevents this)
+                const selectedOptionText = result.selectedOption ?
+                    `${result.selectedOption}) ${riddles.find(r => r.name === result.riddleName).multiChoice[result.selectedOption]}` :
+                    'No Answer';
+                row.insertCell().textContent = selectedOptionText;
+                row.insertCell().textContent = `${riddles.find(r => r.name === result.riddleName).multiChoice[result.correctAnswer]}`; // Display the correct answer text
+                const resultCell = row.insertCell();
+                resultCell.textContent = result.isCorrect ? 'Correct' : 'Incorrect';
+                resultCell.classList.add(result.isCorrect ? 'correct' : 'incorrect');
+            });
+
+            scoreSummary.textContent = `You got ${correctCount} out of ${riddles.length} riddles correct!`;
+            scoreSheetOverlay.classList.add('active');
+        }
+
+        /**
+         * Resets the game to its initial state.
+         */
+        function startNewGame() {
+            closeRiddleDisplay();
+            scoreSheetOverlay.classList.remove('active');
+            gameResults = []; // Clear all previous game results
+            startGameButton.classList.remove('hidden'); // Show the start button again
+            riddleCardGrid.classList.add('hidden'); // Hide the grid until started again
+
+            // Reset all riddle cards to default state if they were already rendered
+            document.querySelectorAll('.riddle-card').forEach(card => {
+                card.classList.remove('answered', 'correct-answer', 'incorrect-answer');
+                card.style.backgroundColor = ''; // Reset background color to default CSS
+                card.style.transform = ''; // Reset any applied transforms
+            });
+        }
+
+
+        // Event Listeners
+
+        // Start Game button
+        startGameButton.addEventListener('click', () => {
+            startGameButton.classList.add('hidden');
+            shuffledRiddles = [...riddles]; // Create a shallow copy
+            shuffleArray(shuffledRiddles);
+            renderRiddleCards();
+        });
+
+        // Close riddle display button (mostly for accidental clicks, next button is primary flow)
+        closeRiddleDisplayButton.addEventListener('click', closeRiddleDisplay);
+
+        // Speak Riddle button
+        speakRiddleButton.addEventListener('click', () => {
+            speakText(riddleTranslation.textContent, 1, 1); // Riddle text, normal rate/pitch
+        });
+
+        // Next step button for original text section (Reveal Clues)
+        nextStepButton1.addEventListener('click', () => {
+            originalTextSection.classList.add('hidden');
+            cluesSection.classList.remove('hidden');
+        });
+
+        // Back to Riddle button
+        backToRiddleButton.addEventListener('click', () => {
+            cluesSection.classList.add('hidden');
+            originalTextSection.classList.remove('hidden');
+        });
+
+
+        // Next step button for clues section (Show Multi-Choice)
+        nextStepButton2.addEventListener('click', () => {
+            cluesSection.classList.add('hidden');
+            multiChoiceSection.classList.remove('hidden');
+        });
+
+        // Back to Clues button
+        backToCluesButton.addEventListener('click', () => {
+            multiChoiceSection.classList.add('hidden');
+            cluesSection.classList.remove('hidden');
+            // Re-enable options if they were disabled by a previous selection attempt
+            optionButtons.forEach(button => button.disabled = false);
+            // Clear countdown if running
+            clearTimeout(countdownInterval);
+            countdownTimer.classList.add('hidden');
+        });
+
+        // Multi-choice option buttons
+        optionButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                // Ensure only one option can be selected
+                if (selectedOption) {
+                    document.querySelector(`[data-option="${selectedOption}"]`).classList.remove('selected');
+                }
+                selectedOption = event.target.dataset.option;
+                event.target.classList.add('selected');
+
+                // Start countdown after an option is selected
+                startCountdownAndReveal();
+            });
+        });
+
+        // Next Riddle / View Score Sheet button
+        nextRiddleButton.addEventListener('click', () => {
+            if (gameResults.length === riddles.length) {
+                // All riddles played, show score sheet
+                showScoreSheet();
+            } else {
+                // Not all riddles played, just close current riddle and return to grid
+                closeRiddleDisplay();
+            }
+        });
+
+        // Play New Game button on score sheet
+        playNewGameButton.addEventListener('click', startNewGame);
+
+        // Initialize the game state when the page loads
+        window.onload = function() {
+            // No specific initial rendering needed here, as the Start Game button handles it.
+        };
+
+    </script>
+</body>
+</html>
 
