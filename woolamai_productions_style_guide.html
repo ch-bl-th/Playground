@@ -1,1 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Woolamai Productions: Classic Style Guide (Finalized Logos)</title>
+    <!-- Google Fonts for Typography Examples -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Lora', serif; /* Default body font */
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 40px;
+            background-color: #f8f8f8;
+        }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif; /* Headline font */
+            color: #004F4F; /* Dark Teal for headings */
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+        h1 { font-size: 2.8em; text-align: center; color: #C04E00; /* Burnt Orange for main title */ margin-bottom: 1em;}
+        h2 { font-size: 2.2em; border-bottom: 2px solid #EEE; padding-bottom: 5px; }
+        h3 { font-size: 1.8em; color: #004F4F; }
+        h4 { font-size: 1.4em; color: #C04E00; }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 20px;
+            border-radius: 5px;
+            background-color: #fdfdfd;
+            border: 1px solid #eee;
+        }
+
+        /* Color Palette */
+        .color-swatch-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .color-swatch {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .color-box {
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #fff; /* Default text color on swatch */
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.1em;
+        }
+        .color-info {
+            padding: 15px;
+            background-color: #fff;
+        }
+        .color-info p {
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+
+        /* Typography Examples */
+        .font-example {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+        }
+        .font-example h4 {
+            margin-top: 0;
+        }
+        .font-heading-example {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #C04E00;
+        }
+        .font-subheading-example {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.5em;
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: #004F4F;
+        }
+        .font-body-example {
+            font-family: 'Lora', serif;
+            font-size: 1.1em;
+            line-height: 1.7;
+            color: #333;
+        }
+        .font-playful-example {
+            font-family: 'Montserrat', sans-serif; /* Using Montserrat in a playful way */
+            font-size: 1.8em;
+            font-weight: 800;
+            color: #C04E00;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        /* Extended Styles for UI Components */
+        /* Cards */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            border: 1px solid #E0E0E0;
+            transition: transform 0.2s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            background-color: #004F4F; /* Dark Teal */
+            color: #fff;
+            padding: 15px 20px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 1.2em;
+            border-bottom: 1px solid #003B3B;
+        }
+        .card-body {
+            padding: 20px;
+            font-family: 'Lora', serif;
+            color: #555;
+            font-size: 0.95em;
+        }
+        .card-footer {
+            background-color: #F8F8F8;
+            padding: 15px 20px;
+            text-align: right;
+            border-top: 1px solid #E0E0E0;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85em;
+            color: #777;
+        }
+        .card-button {
+            display: inline-block;
+            padding: 10px 18px;
+            background-color: #C04E00; /* Deep Burnt Orange */
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: background-color 0.3s ease;
+        }
+        .card-button:hover {
+            background-color: #A34200; /* Slightly darker orange */
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-family: 'Lora', serif;
+            font-size: 0.95em;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            overflow: hidden; /* Ensures border-radius applies */
+        }
+        table thead th {
+            background-color: #004F4F; /* Dark Teal */
+            color: #fff;
+            padding: 12px 15px;
+            text-align: left;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 1em;
+            border-bottom: 2px solid #003B3B;
+        }
+        table tbody td {
+            padding: 10px 15px;
+            border-bottom: 1px solid #E0E0E0; /* Light Grey */
+            color: #444;
+        }
+        table tbody tr:nth-child(odd) {
+            background-color: #FDFDFD; /* Slightly off-white for subtle stripe */
+        }
+        table tbody tr:nth-child(even) {
+            background-color: #FFFFFF;
+        }
+        table tbody tr:hover {
+            background-color: #F0F8F8; /* Lightest Teal for hover */
+            cursor: pointer;
+        }
+
+        /* Forms */
+        form {
+            background-color: #fdfdfd;
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            color: #004F4F; /* Dark Teal */
+            font-size: 0.95em;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="password"],
+        .form-group textarea {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid #CCCCCC; /* Medium Grey */
+            border-radius: 5px;
+            font-family: 'Lora', serif;
+            font-size: 1em;
+            color: #333;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: #C04E00; /* Deep Burnt Orange on focus */
+            box-shadow: 0 0 0 3px rgba(192, 78, 0, 0.2); /* Soft orange glow */
+            outline: none;
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .form-button {
+            display: block;
+            width: 100%;
+            padding: 12px 20px;
+            background-color: #C04E00; /* Deep Burnt Orange */
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+        .form-button:hover {
+            background-color: #A34200; /* Slightly darker orange */
+            transform: translateY(-1px);
+        }
+        .form-button:active {
+            transform: translateY(0);
+        }
+
+        /* Logo and Favicon Section */
+        .logo-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-top: 30px;
+        }
+        .logo-container, .favicon-container {
+            border: 1px dashed #ccc;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .logo-container {
+            width: 80%; /* Adjust width for main logo display */
+            max-width: 400px;
+        }
+        .favicon-container {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo-container img, .favicon-container img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Woolamai Productions: Classic Style Guide</h1>
+        <p style="text-align: center; margin-bottom: 40px;">
+            A guide to the visual and tonal identity of Woolamai Productions, combining the tranquility of Cape Woolamai with the dynamism of modern content creation.
+        </p>
+
+        <div class="section">
+            <h2>1. Brand Overview: The Essence</h2>
+            <p>
+                Woolamai Productions is a personal content creation company rooted in family, history, and heritage. Specializing in website development, audiobooks, and fun videos, our focus is on bringing cherished family situations, albums, and stories to life. While primarily serving our family, the visual identity is crafted with broader applications in mind, exuding a unique blend of classic elegance and modern playfulness.
+            </p>
+            <p>
+                Our core spirit is the harmonious convergence of different creative streams – <strong>video, photo, music, and audio all coming together</strong> – much like a beautiful symphony or a perfectly composed visual.
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>2. Finalized Logo & Favicon</h2>
+            <p>After careful consideration, the finalized logo for Woolamai Productions perfectly encapsulates the brand's essence: a harmonious blend of the tranquil ocean and the dynamic nature of content creation, featuring film strip elements in our signature burnt orange and dark teal colors, accompanied by clear, modern typography.</p>
+
+            <div class="logo-section">
+                <h3>Primary Logo</h3>
+                <div class="logo-container">
+                    <img src="images/Woolamai Productions.jpeg" alt="Finalized Woolamai Productions Logo">
+                </div>
+                <p class="logo-description">
+                    This is the primary logo for Woolamai Productions, featuring a dynamic film strip element flowing in two waves, colored with Deep Burnt Orange and Dark Teal. The "WOOLAMAI" text is set in a strong, modern sans-serif, while "PRODUCTIONS" uses a lighter weight of the same or a complementary serif font, ensuring clarity and sophistication.
+                </p>
+
+                <h3>Favicon & Social Media Avatar</h3>
+                <div class="favicon-container">                 -->
+                    <img src="images/Woolamai Productions Favicon.jpeg" alt="Finalized Woolamai Productions Favicon">
+                </div>
+                <p class="logo-description">
+                    The favicon is a simplified, square version of the primary logo's graphic element, optimized for small-scale use in browser tabs, app icons, and social media profiles. It retains the core visual identity of the flowing film strip in the brand's key colors.
+                </p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>3. Color Palette</h2>
+            <p>Inspired by the dramatic beauty of Cape Woolamai, our palette combines the warmth of a sunset with the depth of the winter ocean, creating a sophisticated yet inviting feel. We've expanded the palette to include secondary and neutral tones for versatile UI design.</p>
+
+            <h3>Primary Colors</h3>
+            <div class="color-swatch-grid">
+                <div class="color-swatch">
+                    <div class="color-box" style="background-color: #C04E00; color: #fff;">
+                        Primary Orange
+                    </div>
+                    <div class="color-info">
+                        <p><strong>Name:</strong> Deep Burnt Orange</p>
+                        <p><strong>Hex:</strong> #C04E00</p>
+                        <p><strong>Usage:</strong> Primary accent, calls to action, main headings. Evokes sunset, energy, passion, and heritage.</p>
+                    </div>
+                </div>
+
+                <div class="color-swatch">
+                    <div class="color-box" style="background-color: #004F4F; color: #fff;">
+                        Primary Teal
+                    </div>
+                    <div class="color-info">
+                        <p><strong>Name:</strong> Dark Teal</p>
+                        <p><strong>Hex:</strong> #004F4F</p>
+                        <p><strong>Usage:</strong> Primary background, main text, structural elements, active states. Conveys depth, tranquility, professionalism.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Secondary & Neutral Colors</h3>
+            <div class="color-swatch-grid">
+                <div class="color-swatch">
+                    <div class="color-box" style="background-color: #FF7B25; color: #fff;">
+                        Accent Orange
+                    </div>
+                    <div class="color-info">
+                        <p><strong>Name:</strong> Warm Sunset Orange</p>
+                        <p><strong>Hex:</strong> #FF7B25</p>
+                        <p><strong>Usage:</strong> Lighter accents, highlights, playful elements, interactive states (e.g., hover on primary buttons).</p>
+                    </div>
+                </div>
+
+                <div class="color-swatch">
+                    <div class="color-box" style="background-color: #008080; color: #fff;">
+                        Accent Teal
+                    </div>
+                    <div class="color-info">
+                        <p><strong>Name:</strong> Ocean Horizon Teal</p>
+                        <p><strong>Hex:</strong> #008080</p>
+                        <p><strong>Usage:</strong> Secondary backgrounds, lighter headers, borders, secondary interactive elements, subtle branding.</p>
+                    </div>
+                </div>
+
+                <div class="color-swatch">
+                    <div class="color-box" style="background-color: #E0E0E0; color: #333;">
+                        Medium Grey
+                    </div>
+                    <div class="color-info">
+                        <p><strong>Name:</strong> Border/Divider Grey</p>
+                        <p><strong>Hex:</strong> #E0E0E0</p>
+                        <p><strong>Usage:</strong> Borders, dividers, subtle shadows, disabled states. Provides clean separation.</p>
+                    </div>
+                </div>
+
+                <div class="color-swatch">
+                    <div class="color-box" style="background-color: #777777; color: #fff;">
+                        Dark Grey Text
+                    </div>
+                    <div class="color-info">
+                        <p><strong>Name:</strong> Subdued Text Grey</p>
+                        <p><strong>Hex:</strong> #777777</p>
+                        <p><strong>Usage:</strong> Secondary text, captions, metadata. Offers good contrast while being softer than black.</p>
+                    </div>
+                </div>
+
+                 <div class="color-swatch">
+                    <div class="color-box" style="background-color: #F8F8F8; color: #333;">
+                        Background Light
+                    </div>
+                    <div class="color-info">
+                        <p><strong>Name:</strong> Light Grey / Off-White</p>
+                        <p><strong>Hex:</strong> #F8F8F8</p>
+                        <p><strong>Usage:</strong> Main page background, subtle section backgrounds. Provides clean space and balances the stronger colors.</p>
+                    * This is also used as a base for white in the examples.
+                    </div>
+                </div>
+
+                <div class="color-swatch">
+                    <div class="color-box" style="background-color: #FFFFFF; color: #333;">
+                        Pure White
+                    </div>
+                    <div class="color-info">
+                        <p><strong>Name:</strong> Pure White</p>
+                        <p><strong>Hex:</strong> #FFFFFF</p>
+                        <p><strong>Usage:</strong> Card backgrounds, main content areas, text on dark backgrounds. Creates crispness and clarity.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>4. Typography</h2>
+            <p>Our typography blends classic elegance with modern clarity, allowing for both sophisticated storytelling and playful expressiveness. We now define specific usage for UI elements.</p>
+
+            <div class="font-example">
+                <h4>Primary Heading Font (Serif)</h4>
+                <p class="font-heading-example">Playfair Display</p>
+                <p class="font-body-example" style="font-family: 'Playfair Display', serif;">
+                    Used for major headlines, titles, and elements where a strong, classic, and sophisticated presence is desired. Its elegant curves and high contrast create a luxurious feel.
+                </p>
+                <p><em>Usage: Page titles, section headings (H1, H2)</em></p>
+            </div>
+
+            <div class="font-example">
+                <h4>Secondary Heading / Modern Accent Font (Sans-Serif)</h4>
+                <p class="font-subheading-example">Montserrat</p>
+                <p class="font-body-example" style="font-family: 'Montserrat', sans-serif;">
+                    Ideal for subheadings, navigation, short statements, and instances requiring a clean, modern, and sharp aesthetic. Its geometric forms provide excellent readability and a contemporary edge.
+                </p>
+                <p><em>Usage: Sub-headings (H3, H4), button text, navigation links, card titles, form labels, table headers.</em></p>
+            </div>
+
+            <div class="font-example">
+                <h4>Body Text Font (Serif)</h4>
+                <p class="font-body-example">Lora</p>
+                <p class="font-body-example">
+                    Designed for long-form content, such as audiobooks, historical narratives, and detailed website text. Lora offers a traditional, highly legible, and sophisticated reading experience, making it perfect for conveying heritage and depth.
+                </p>
+                <p><em>Usage: All body paragraphs, detailed descriptions, table cell content, input field text.</em></p>
+            </div>
+
+             <div class="font-example">
+                <h4>Playful / Expressive Usage</h4>
+                <p class="font-playful-example">Fun Moments!</p>
+                <p class="font-body-example">
+                    Playfulness can be introduced not necessarily with a separate "fun" font, but by using the existing fonts (like Montserrat) in bold, uppercase, with increased letter-spacing, or by varying sizes and weights dramatically. This maintains overall brand cohesion while allowing for joyful expression where appropriate (e.g., video titles, call-outs, prominent features).
+                </p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>5. Imagery & Photography Style</h2>
+            <p>Our visual content will span a vast timeline, from <strong>150-year-old historical photos to modern, fun, and Instagrammable moments</strong>. The key is to create a cohesive yet diverse visual narrative.</p>
+            <ul>
+                <li><strong>Historical Images:</strong> Will be treated with respect, potentially using subtle sepia tones, desaturation, or a consistent soft vignette to evoke a sense of age and nostalgia. Framing with minimalist borders can add a "museum exhibit" quality.</li>
+                <li><strong>Modern & Fun Imagery:</strong> Will embrace vibrancy and authenticity. A consistent light and color grade (perhaps slightly warm to tie into the orange, or cool to tie into the teal, depending on context) will be applied to maintain brand consistency. Emphasis on candid, joyful moments.</li>
+                <li><strong>Unification Techniques:</strong> Consider using consistent aspect ratios, minimalist overlays (e.g., a transparent hint of our teal or orange), or strategic cropping to unify the diverse collection. The focus should always be on storytelling, making each image a window into a part of our family's narrative.</li>
+                <li><strong>Video & Audiovisual:</strong> Visuals for videos and audio content will reflect the dynamic nature of our production, using cuts, transitions, and motion graphics that feel both sharp and sophisticated, while incorporating the brand colors and typography.</li>
+                <li><strong>No Images:</strong> No images (from URLs or base64) are included in this style guide. The descriptions and SVG are provided to illustrate concepts only.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>6. UI Component Examples</h2>
+            <p>Below are examples of how our extended color palette and typography can be applied to common website UI elements.</p>
+
+            <h3>Cards</h3>
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-header">
+                        Family Archive Project
+                    </div>
+                    <div class="card-body">
+                        <p>Discover historical photos and documents, meticulously digitized to preserve our family's heritage for generations to come. A journey through time.</p>
+                        <p style="font-size: 0.85em; color: #777;"><em>Curated by: J. Smith</em></p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#" class="card-button">View Collection</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        Latest Video Release
+                    </div>
+                    <div class="card-body">
+                        <p>Watch our new short film, "Coastal Whispers," a playful look at life by the sea, blending candid family moments with stunning drone footage of Cape Woolamai.</p>
+                        <p style="font-size: 0.85em; color: #777;"><em>Runtime: 7 min</em></p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#" class="card-button">Watch Now</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        New Audiobook Chapter
+                    </div>
+                    <div class="card-body">
+                        <p>Listen to "The Old Boat Shed," the latest chapter in our family history audiobook. Narrated by [Family Member Name], it brings vivid stories to life.</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#" class="card-button">Listen Here</a>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Data Table</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Project Name</th>
+                        <th>Type</th>
+                        <th>Date Completed</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Woolamai Website V1</td>
+                        <td>Web Development</td>
+                        <td>2024-03-15</td>
+                        <td>Live</td>
+                    </tr>
+                    <tr>
+                        <td>Family Heritage Audiobook</td>
+                        <td>Audio Production</td>
+                        <td>2025-01-20</td>
+                        <td>Ongoing</td>
+                    </tr>
+                    <tr>
+                        <td>Cape Woolamai Drone Footage</td>
+                        <td>Video Production</td>
+                        <td>2024-11-01</td>
+                        <td>Completed</td>
+                    </tr>
+                    <tr>
+                        <td>Grandpa's Stories Podcast</td>
+                        <td>Audio Series</td>
+                        <td>2025-06-10</td>
+                        <td>In Progress</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Input Form</h3>
+            <form>
+                <div class="form-group">
+                    <label for="name">Your Name</label>
+                    <input type="text" id="name" name="name" placeholder="John Doe">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="you@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="message">Your Message</label>
+                    <textarea id="message" name="message" placeholder="Type your message here..."></textarea>
+                </div>
+                <button type="submit" class="form-button">Send Message</button>
+            </form>
+        </div>
+
+        <div class="section">
+            <h2>7. Tone of Voice</h2>
+            <p>The voice of Woolamai Productions is a reflection of its unique identity: personal, professional, and deeply rooted in connection.</p>
+            <ul>
+                <li><strong>Warm & Engaging:</strong> Approachable and inviting, especially when sharing family stories and heritage.</li>
+                <li><strong>Knowledgeable & Clear:</strong> When discussing history, processes (like website development), or providing information.</li>
+                <li><strong>Joyful & Approachable:</strong> For lighter content, celebrating milestones, and encouraging participation.</li>
+                <li><strong>Respectful & Appreciative:</strong> Honoring the past, the people, and the stories we share.</li>
+                <li><strong>Authentic:</strong> True to who we are, without pretension, focusing on genuine experiences.</li>
+            </ul>
+        </div>
+
+        <div class="section" style="text-align: center;">
+            <p>&copy; 2025 Woolamai Productions. All Rights Reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
+
 
