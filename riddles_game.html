@@ -19,9 +19,14 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 1rem;
+            padding: 0.5rem; /* Reduced padding for very small screens */
             box-sizing: border-box;
             color: #3e2723; /* Dark brown text for antique feel */
+        }
+        @media (min-width: 481px) { /* Restore padding for larger mobiles/tablets */
+            body {
+                padding: 1rem;
+            }
         }
 
         .game-container {
@@ -30,9 +35,14 @@
             background-color: #fcf9f2; /* Lighter aged paper */
             border-radius: 1.5rem; /* Rounded corners */
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2), inset 0 0 10px rgba(0, 0, 0, 0.05); /* Deeper shadow, subtle inner shadow */
-            padding: 1.5rem; /* Adjusted for smaller screens */
+            padding: 1rem; /* Further adjusted for very small screens */
             text-align: center;
             border: 2px solid #d4c8b3; /* Subtle aged border */
+        }
+        @media (min-width: 481px) { /* Adjust padding for larger mobiles */
+            .game-container {
+                padding: 1.5rem;
+            }
         }
         @media (min-width: 640px) { /* Apply larger padding for sm and up */
             .game-container {
@@ -46,44 +56,78 @@
             color: #2e1a0b; /* Even darker brown for headings */
         }
 
+        /* Adjust H1 font size for very small screens */
+        h1 {
+            font-size: 2.5rem; /* Default for mobile */
+            margin-bottom: 0.75rem;
+        }
+        @media (min-width: 481px) {
+            h1 {
+                font-size: 3rem; /* Larger for tablets/desktops */
+            }
+        }
+        @media (min-width: 640px) {
+            h1 {
+                font-size: 4rem; /* Even larger for desktop */
+            }
+        }
+
+
         .card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* Responsive grid for cards */
-            gap: 1.8rem; /* Slightly larger gap */
-            margin-top: 2.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Smaller min-width for very small screens */
+            gap: 1rem; /* Reduced gap for very small screens */
+            margin-top: 1.5rem; /* Adjusted margin */
             justify-items: center;
         }
+        @media (min-width: 481px) {
+            .card-grid {
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+                gap: 1.8rem;
+                margin-top: 2.5rem;
+            }
+        }
+
 
         .riddle-card {
             background-color: #a0522d; /* Sienna brown for old paper */
             color: #f5f5dc; /* Off-white text */
-            border-radius: 0.8rem; /* Slightly less perfect rounded corners */
-            padding: 1.5rem;
+            border-radius: 0.8rem;
+            padding: 1rem; /* Reduced padding for very small cards */
             cursor: pointer;
             transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 180px; /* Fixed height for cards */
-            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3), inset 0 0 8px rgba(255, 255, 255, 0.1); /* Worn shadow */
-            font-size: 1.1rem;
-            font-weight: 700; /* Bolder text on cards */
+            height: 150px; /* Slightly smaller fixed height for very small screens */
+            min-height: 120px; /* Ensure a minimum height */
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3), inset 0 0 8px rgba(255, 255, 255, 0.1);
+            font-size: 0.95rem; /* Smaller font for card titles on very small screens */
+            font-weight: 700;
             text-align: center;
-            /* Random rotation and slight displacement will be applied via JS */
+            word-break: break-word; /* Allow long words to break */
+            overflow: hidden; /* Hide overflow if text is too long */
+        }
+        @media (min-width: 481px) {
+            .riddle-card {
+                padding: 1.5rem;
+                height: 180px; /* Restore original height for larger screens */
+                font-size: 1.1rem;
+            }
         }
 
         .riddle-card:hover:not(.answered) {
-            transform: translateY(-10px) scale(1.03); /* More pronounced lift */
+            transform: translateY(-10px) scale(1.03);
             box-shadow: 8px 8px 25px rgba(0, 0, 0, 0.4), inset 0 0 10px rgba(255, 255, 255, 0.15);
         }
 
         .riddle-card.correct-answer {
-            background-color: #388e3c; /* Darker green for correct */
+            background-color: #388e3c;
         }
 
         .riddle-card.incorrect-answer {
-            background-color: #d32f2f; /* Darker red for incorrect */
+            background-color: #d32f2f;
         }
 
         .riddle-card.answered {
@@ -98,7 +142,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.8); /* Darker overlay */
+            background-color: rgba(0, 0, 0, 0.8);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -114,31 +158,38 @@
         }
 
         .riddle-display-card, .score-sheet-card {
-            background-color: #fff8dc; /* Creamy background for inner card */
+            background-color: #fff8dc;
             border-radius: 1.5rem;
-            padding: 2rem; /* Adjusted for smaller screens */
-            max-width: 750px; /* Slightly wider */
-            width: 90%;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35); /* Prominent shadow */
+            padding: 1.5rem; /* Adjusted for very small screens */
+            max-width: 750px;
+            width: 95%; /* Increased width for better use of space on mobile */
+            max-height: 95vh; /* Limit height to prevent overflow on small screens */
+            overflow-y: auto; /* Allow scrolling if content is too long */
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
             position: relative;
             transform: scale(0.9);
             opacity: 0;
             transition: transform 0.3s ease, opacity 0.3s ease;
-            border: 3px solid #b79c7d; /* More distinct border */
+            border: 3px solid #b79c7d;
         }
 
+        @media (min-width: 481px) { /* Adjust padding for larger mobiles */
+            .riddle-display-card, .score-sheet-card {
+                padding: 2rem;
+            }
+        }
         @media (min-width: 640px) { /* Apply larger padding for sm and up */
             .riddle-display-card, .score-sheet-card {
                 padding: 3rem;
             }
         }
 
-        .riddle-content-section {
-            margin-bottom: 1.8rem; /* Increased margin */
-            padding-bottom: 1.8rem;
-            border-bottom: 1px dashed #c0a880; /* Dashed aged border */
-        }
 
+        .riddle-content-section {
+            margin-bottom: 1.5rem; /* Adjusted margin */
+            padding-bottom: 1.5rem;
+            border-bottom: 1px dashed #c0a880;
+        }
         .riddle-content-section:last-child {
             border-bottom: none;
             margin-bottom: 0;
@@ -146,55 +197,55 @@
         }
 
         .multi-choice-options button {
-            background-color: #d2b48c; /* Tan color for options */
-            color: #3e2723; /* Dark brown text */
-            padding: 0.8rem 1.5rem;
+            background-color: #d2b48c;
+            color: #3e2723;
+            padding: 0.6rem 1rem; /* Adjusted padding for smaller buttons */
             border-radius: 0.75rem;
-            margin: 0.6rem;
-            font-size: 1.05rem;
+            margin: 0.4rem; /* Adjusted margin */
+            font-size: 0.95rem; /* Adjusted font size for buttons */
             font-weight: 600;
             cursor: pointer;
             transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.1s ease;
-            width: calc(50% - 1.2rem); /* Two columns on desktop with gap */
+            width: calc(50% - 0.8rem); /* Adjusted width calc for smaller margins */
             box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.15);
         }
 
         @media (max-width: 640px) {
             .multi-choice-options button {
-                width: calc(100% - 1.2rem); /* Full width on mobile */
+                width: calc(100% - 0.8rem); /* Full width on mobile, adjusted margin */
             }
         }
 
         .multi-choice-options button:hover:not(:disabled) {
-            background-color: #c09b6a; /* Darker tan on hover */
+            background-color: #c09b6a;
             transform: translateY(-3px);
             box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.25);
         }
 
         .multi-choice-options button.selected {
-            background-color: #8b4513; /* Saddle brown for selected */
+            background-color: #8b4513;
             color: white;
             box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.3);
         }
 
         .multi-choice-options button.correct {
-            background-color: #2e8b57; /* Sea green for correct */
+            background-color: #2e8b57;
             color: white;
         }
 
         .multi-choice-options button.incorrect {
-            background-color: #b22222; /* Firebrick red for incorrect */
+            background-color: #b22222;
             color: white;
         }
 
         .close-button {
             position: absolute;
-            top: 1rem;
-            right: 1rem;
+            top: 0.75rem; /* Adjusted position */
+            right: 0.75rem; /* Adjusted position */
             background: none;
             border: none;
-            font-size: 2.2rem; /* Larger close button */
-            color: #b79c7d; /* Matches aged border color */
+            font-size: 1.8rem; /* Adjusted size */
+            color: #b79c7d;
             cursor: pointer;
             transition: color 0.2s ease;
         }
@@ -210,135 +261,196 @@
 
         /* Button styling */
         .btn {
-            padding: 0.8rem 2.2rem;
-            border-radius: 0.8rem;
-            font-size: 1.15rem; /* Slightly larger text */
+            padding: 0.7rem 1.8rem; /* Adjusted padding */
+            border-radius: 0.7rem; /* Adjusted border radius */
+            font-size: 1.05rem; /* Adjusted font size */
             font-weight: 700;
             cursor: pointer;
             transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            text-transform: uppercase; /* Game show feel */
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15); /* Slightly smaller shadow */
+            text-transform: uppercase;
             letter-spacing: 0.05em;
         }
+        @media (min-width: 481px) { /* Restore larger button styling for bigger screens */
+            .btn {
+                padding: 0.8rem 2.2rem;
+                border-radius: 0.8rem;
+                font-size: 1.15rem;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
+        }
+
 
         .btn-primary {
-            background-color: #8b4513; /* Saddle brown */
+            background-color: #8b4513;
             color: #fff;
         }
 
         .btn-primary:hover {
-            background-color: #a0522d; /* Sienna brown */
+            background-color: #a0522d;
             transform: translateY(-3px);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
         }
 
         .btn-secondary {
-            background-color: #c0a880; /* Muted gold/tan */
-            color: #3e2723; /* Dark brown text */
-            margin-top: 1.2rem; /* Increased margin */
-            display: flex; /* For icon centering */
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem; /* Space between icon and text */
-            padding: 0.8rem 1.5rem; /* Adjust padding for icons */
-            font-size: 1.05rem; /* Smaller for clarity next to icon */
-        }
-
-        .btn-secondary:hover {
-            background-color: #d2b48c; /* Lighter gold/tan */
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary i {
-            font-size: 1.4em; /* Adjust icon size */
-        }
-
-        .counter-text {
-            font-size: 2.8rem; /* Larger timer text */
-            font-weight: 700;
-            color: #8b4513; /* Saddle brown for timer */
-            margin-top: 1.5rem;
+            background-color: #c0a880;
+            color: #3e2723;
+            margin-top: 1rem; /* Adjusted margin */
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.8rem;
+            gap: 0.4rem; /* Adjusted gap */
+            padding: 0.7rem 1.2rem; /* Adjusted padding for secondary buttons */
+            font-size: 0.95rem; /* Adjusted font size */
+        }
+        @media (min-width: 481px) { /* Restore larger secondary button styling */
+            .btn-secondary {
+                margin-top: 1.2rem;
+                gap: 0.5rem;
+                padding: 0.8rem 1.5rem;
+                font-size: 1.05rem;
+            }
         }
 
-        .counter-text i {
-            font-size: 1.2em; /* Ensure clock icon is visible */
+        .btn-secondary i {
+            font-size: 1.2em; /* Adjusted icon size for smaller buttons */
         }
+        @media (min-width: 481px) {
+            .btn-secondary i {
+                font-size: 1.4em;
+            }
+        }
+
+        .counter-text {
+            font-size: 2rem; /* Reduced font size for very small screens */
+            font-weight: 700;
+            color: #8b4513;
+            margin-top: 1rem; /* Adjusted margin */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem; /* Adjusted gap */
+        }
+        @media (min-width: 481px) {
+            .counter-text {
+                font-size: 2.8rem;
+                margin-top: 1.5rem;
+                gap: 0.8rem;
+            }
+        }
+        .counter-text i {
+            font-size: 1em; /* Adjusted icon size */
+        }
+        @media (min-width: 481px) {
+            .counter-text i {
+                font-size: 1.2em;
+            }
+        }
+
 
         .score-sheet-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 2rem; /* Increased margin */
+            margin-top: 1.5rem; /* Adjusted margin */
+            font-size: 0.9rem; /* Smaller font for table on very small screens */
+        }
+        @media (min-width: 481px) {
+            .score-sheet-table {
+                margin-top: 2rem;
+                font-size: 1rem;
+            }
         }
 
         .score-sheet-table th, .score-sheet-table td {
-            padding: 0.9rem; /* More padding in table */
-            border: 1px solid #d4c8b3; /* Matches container border */
+            padding: 0.6rem; /* Adjusted padding */
+            border: 1px solid #d4c8b3;
             text-align: left;
             color: #3e2723;
         }
+        @media (min-width: 481px) {
+            .score-sheet-table th, .score-sheet-table td {
+                padding: 0.9rem;
+            }
+        }
 
         .score-sheet-table th {
-            background-color: #f0ead8; /* Lighter aged paper */
+            background-color: #f0ead8;
             font-weight: 700;
             color: #2e1a0b;
         }
 
         .score-sheet-table tr:nth-child(even) {
-            background-color: #fcf9f2; /* Subtle stripe */
+            background-color: #fcf9f2;
         }
 
         .score-sheet-table td.correct {
-            color: #2f855a; /* Darker green */
+            color: #2f855a;
             font-weight: 600;
         }
 
         .score-sheet-table td.incorrect {
-            color: #c53030; /* Darker red */
+            color: #c53030;
             font-weight: 600;
         }
 
         /* Specific styles for riddle text display */
         .riddle-display-card .riddle-translation-text {
-            font-size: 1.8rem; /* Larger font for translation */
-            font-weight: 700; /* Bold for translation */
-            color: #2e1a0b; /* Darker brown */
-            margin-bottom: 0.5rem;
+            font-size: 1.4rem; /* Adjusted font size for very small screens */
+            font-weight: 700;
+            color: #2e1a0b;
+            margin-bottom: 0.4rem;
+        }
+        @media (min-width: 481px) {
+            .riddle-display-card .riddle-translation-text {
+                font-size: 1.8rem;
+                margin-bottom: 0.5rem;
+            }
         }
 
         .riddle-display-card .riddle-original-text {
-            font-size: 1.1rem; /* Smaller font for original text */
-            font-style: italic; /* Italic for original text */
-            font-weight: 400; /* Not bold */
-            color: #5d4037; /* Slightly lighter brown for original text */
+            font-size: 0.95rem; /* Adjusted font size for very small screens */
+            font-style: italic;
+            font-weight: 400;
+            color: #5d4037;
             margin-top: 0;
+        }
+        @media (min-width: 481px) {
+            .riddle-display-card .riddle-original-text {
+                font-size: 1.1rem;
+            }
         }
 
         .speak-riddle-button {
-            background-color: #c0a880; /* Muted gold/tan */
-            color: #3e2723; /* Dark brown text */
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            font-size: 1rem;
+            background-color: #c0a880;
+            color: #3e2723;
+            padding: 0.4rem 0.8rem; /* Adjusted padding */
+            border-radius: 0.4rem; /* Adjusted border radius */
+            font-size: 0.85rem; /* Adjusted font size */
             font-weight: 600;
             cursor: pointer;
             transition: background-color 0.2s ease, transform 0.1s ease;
-            margin-top: 1rem;
+            margin-top: 0.8rem; /* Adjusted margin */
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem; /* Adjusted gap */
         }
-
-        .speak-riddle-button:hover {
-            background-color: #d2b48c;
-            transform: translateY(-2px);
+        @media (min-width: 481px) {
+            .speak-riddle-button {
+                padding: 0.5rem 1rem;
+                border-radius: 0.5rem;
+                font-size: 1rem;
+                margin-top: 1rem;
+                gap: 0.5rem;
+            }
         }
 
         .speak-riddle-button i {
-            font-size: 1.2em;
+            font-size: 1.1em; /* Adjusted icon size */
+        }
+        @media (min-width: 481px) {
+            .speak-riddle-button i {
+                font-size: 1.2em;
+            }
         }
     </style>
 </head>
@@ -1050,22 +1162,3 @@
     </script>
 </body>
 </html>
-```
-
-The issue you're experiencing with the screen going brown but no riddle content appearing after clicking a card on the GitHub Pages version of `riddles_game.html` is likely due to the JavaScript encountering an unexpected state or a timing issue with the CSS transitions when the page loads from a live server.
-
-I've updated the `riddle-game` Canvas with your provided code and added a `try...catch` block around the core logic of the `openRiddle` function. This will help us pinpoint if any errors are occurring during the population or display of riddle data. I've also added more explicit JavaScript style applications to ensure the overlay and content become visible immediately.
-
-**Here's what I've changed in the `openRiddle` function:**
-
-* **Error Handling (`try...catch`):** The entire content population and display logic within `openRiddle` is now wrapped in a `try...catch` block. If any JavaScript error occurs (e.g., trying to access a property of `riddle` that might be `undefined` unexpectedly), it will be caught, logged to the console, and an `alert` will notify you. This is crucial for debugging issues that only manifest on the live server.
-* **Explicit Style Overrides:** Added `riddleDisplayCard.style.opacity = '1';` and `riddleDisplayCard.style.transform = 'scale(1)';` directly in JavaScript. This ensures that even if the CSS transitions tied to the `.active` class are not firing perfectly due to browser quirks or timing, the card will explicitly become fully visible.
-* **Defensive Programming:** Added a check `if (!riddle)` at the start of `openRiddle` to log an error and exit if, for some reason, the `riddle` object for the clicked index is not found.
-
-**Please update your `riddles_game.html` file on your GitHub repository (`https://github.com/ch-bl-th/Playground/riddles_game.html`) with the *entire* code from the `riddle-game` Canvas. Once updated, remember to:**
-
-1.  **Commit** the changes to your `main` branch.
-2.  **Wait** a few minutes for GitHub Pages to redeploy.
-3.  **Clear your browser's cache** on your mobile phone or open the page in an incognito/private window to ensure you're loading the freshest version.
-
-After these steps, try clicking a card again on the GitHub-hosted version. If it still doesn't work, please provide any new error messages you see in the browser's developer console (if you can access it on mobile or through remote debugging from a deskto
