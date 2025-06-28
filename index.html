@@ -3,13 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loading Classical Riddles Game...</title>
-    <!-- This meta tag immediately redirects to your game file -->
-    <meta http-equiv="refresh" content="0; url=riddles_game.html">
+    <title>Classical Riddles Game - Welcome</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - EB Garamond for "Ye Olde" feel -->
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;700&display=swap" rel="stylesheet">
     <!-- Canonical link to help search engines understand the true content location -->
     <link rel="canonical" href="https://ch-bl-th.github.io/Playground/riddles_game.html" />
+    <style>
+        body {
+            font-family: 'EB Garamond', serif; /* Changed font to "Ye Olde" style */
+            background-color: #e6e0d0; /* Muted, aged paper background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+            box-sizing: border-box;
+            color: #3e2723; /* Dark brown text for antique feel */
+        }
+
+        .landing-container {
+            max-width: 700px;
+            width: 100%;
+            background-color: #fcf9f2; /* Lighter aged paper */
+            border-radius: 1.5rem; /* Rounded corners */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2), inset 0 0 10px rgba(0, 0, 0, 0.05); /* Deeper shadow, subtle inner shadow */
+            padding: 2.5rem;
+            text-align: center;
+            border: 2px solid #d4c8b3; /* Subtle aged border */
+        }
+
+        h1 {
+            font-family: 'EB Garamond', serif;
+            font-weight: 700; /* Bold for headings */
+            color: #2e1a0b; /* Even darker brown for headings */
+            font-size: 3rem; /* Larger title */
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1.2rem;
+            color: #3e2723;
+            margin-bottom: 1.5rem;
+        }
+
+        .copyright-text {
+            font-size: 0.9rem;
+            color: #6a5c4e;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            display: inline-block; /* Make button behave like a block for styling */
+            padding: 1rem 2.5rem; /* Larger padding for button */
+            border-radius: 0.8rem;
+            font-size: 1.3rem; /* Larger font for button */
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            text-decoration: none; /* Remove underline from link */
+        }
+
+        .btn-primary {
+            background-color: #8b4513; /* Saddle brown */
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background-color: #a0522d; /* Sienna brown */
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+    </style>
 </head>
 <body>
-    <p>If you are not redirected automatically, follow this <a href="riddles_game.html">link to the Classical Riddles Game</a>.</p>
+    <div class="landing-container">
+        <h1>Welcome to the Classical Riddles Challenge!</h1>
+        <p>Step back in time and test your intellect against the wit of ancient minds.</p>
+        <p>Uncover hidden meanings, decipher cryptic clues, and unravel the mysteries of old.</p>
+
+        <a href="riddles_game.html" class="btn btn-primary">Start Your Journey</a>
+
+        <p class="copyright-text">Brought to you by Woomamai Products &copy; 2025</p>
+    </div>
 </body>
 </html>
