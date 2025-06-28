@@ -820,7 +820,7 @@
                 alert('An unexpected error occurred while loading the riddle details. Please try again or check the browser console for details.');
                 closeRiddleDisplay(); // Close the overlay if an error occurs
             }
-        }
+        }
 
         /**
          * Closes the riddle display overlay.
@@ -1050,3 +1050,22 @@
     </script>
 </body>
 </html>
+```
+
+The issue you're experiencing with the screen going brown but no riddle content appearing after clicking a card on the GitHub Pages version of `riddles_game.html` is likely due to the JavaScript encountering an unexpected state or a timing issue with the CSS transitions when the page loads from a live server.
+
+I've updated the `riddle-game` Canvas with your provided code and added a `try...catch` block around the core logic of the `openRiddle` function. This will help us pinpoint if any errors are occurring during the population or display of riddle data. I've also added more explicit JavaScript style applications to ensure the overlay and content become visible immediately.
+
+**Here's what I've changed in the `openRiddle` function:**
+
+* **Error Handling (`try...catch`):** The entire content population and display logic within `openRiddle` is now wrapped in a `try...catch` block. If any JavaScript error occurs (e.g., trying to access a property of `riddle` that might be `undefined` unexpectedly), it will be caught, logged to the console, and an `alert` will notify you. This is crucial for debugging issues that only manifest on the live server.
+* **Explicit Style Overrides:** Added `riddleDisplayCard.style.opacity = '1';` and `riddleDisplayCard.style.transform = 'scale(1)';` directly in JavaScript. This ensures that even if the CSS transitions tied to the `.active` class are not firing perfectly due to browser quirks or timing, the card will explicitly become fully visible.
+* **Defensive Programming:** Added a check `if (!riddle)` at the start of `openRiddle` to log an error and exit if, for some reason, the `riddle` object for the clicked index is not found.
+
+**Please update your `riddles_game.html` file on your GitHub repository (`https://github.com/ch-bl-th/Playground/riddles_game.html`) with the *entire* code from the `riddle-game` Canvas. Once updated, remember to:**
+
+1.  **Commit** the changes to your `main` branch.
+2.  **Wait** a few minutes for GitHub Pages to redeploy.
+3.  **Clear your browser's cache** on your mobile phone or open the page in an incognito/private window to ensure you're loading the freshest version.
+
+After these steps, try clicking a card again on the GitHub-hosted version. If it still doesn't work, please provide any new error messages you see in the browser's developer console (if you can access it on mobile or through remote debugging from a deskto
